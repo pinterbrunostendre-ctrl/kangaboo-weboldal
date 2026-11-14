@@ -715,3 +715,9 @@ body.mega-open .mega-scrim{opacity:1;visibility:visible;transition:opacity .18s}
 .mega-tops a .chev{display:none}
 .mega-subs{grid-template-columns:repeat(2,1fr)}
 @media (min-width:1400px){.mega-subs{grid-template-columns:repeat(3,1fr)}}
+
+/* A4 (próba, csak a főoldalon): kerek, barátságos címsorok – Nunito 800 */
+body.font-trial #app h1,body.font-trial #app h2,body.font-trial #app h3{font-family:"Nunito",var(--sans);font-weight:800;letter-spacing:-.015em}
+body.font-trial #app .hero h1{letter-spacing:-.025em;line-height:1.08}
+body.font-trial #app .cat h3,body.font-trial #app .prod h3{font-family:var(--sans);font-weight:700;letter-spacing:0}
+body.font-trial #app .stats strong,body.font-trial #app .pts strong,body.font-trial #app .brands .list a{font-family:"Nunito",var(--sans);font-weight:800}

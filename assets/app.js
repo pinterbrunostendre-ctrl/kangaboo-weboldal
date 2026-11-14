@@ -1078,6 +1078,8 @@ function route(){
   const [path,qs]=h.split('?');
   const q=new URLSearchParams(qs||'');
   const seg=path.split('/').filter(Boolean).map(decodeURIComponent);
+  // A4 próba: kerek, játékos címsor-betűtípus egyelőre csak a főoldalon
+  document.body.classList.toggle('font-trial',!seg[0]);
   document.title='Kangaboo – Baba- és gyermekáruház';
   $$('nav.main > .wrap > ul > li > a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#/'+seg[0]));
   switch(seg[0]){
