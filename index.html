@@ -125,7 +125,11 @@
   </div>
 </div>
 
-<main id="app" tabindex="-1"></main>
+<main id="app" tabindex="-1" aria-busy="true">
+  <div class="wrap"><span class="sr-only">Betöltés…</span>
+    <div class="hero-grid" style="padding:44px 0 64px"><div><div class="sk sk-line short"></div><div class="sk sk-title" style="height:110px"></div><div class="sk sk-line"></div><div class="sk sk-line" style="width:70%"></div><div class="sk" style="width:190px;height:50px;border-radius:999px;margin-top:28px"></div></div><div class="sk" style="aspect-ratio:1/1;border-radius:28px"></div></div>
+  </div>
+</main>
 
 <footer>
   <div class="wrap">
@@ -164,8 +168,8 @@
 
 <div class="toast" id="toast" role="status"><svg class="icon"><use href="#i-check"/></svg><span></span></div>
 
-<script src="data/products.js"></script>
+<script defer src="data/home.js"></script>
 <script>(function(){var b=document.getElementById('demoBar');function s(){document.documentElement.style.setProperty('--demo-h',b.offsetHeight+'px')}s();if(window.ResizeObserver)new ResizeObserver(s).observe(b);addEventListener('resize',s)})();</script>
-<script src="assets/app.js"></script>
+<script defer src="assets/app.js"></script>
 </body>
 </html>

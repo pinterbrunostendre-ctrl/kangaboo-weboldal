@@ -1,1 +1,0 @@
-window.KB_DETAILS={};

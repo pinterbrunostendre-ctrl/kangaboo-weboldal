@@ -27,7 +27,10 @@ Nyisd meg az `index.html` fájlt böngészőben, vagy tedd fel bármilyen statik
 index.html            oldalváz, fejléc, lábléc, ikonok
 assets/style.css      teljes dizájn (reszponzív, 3 töréspont)
 assets/app.js         útválasztás, oldalak, szűrés, kosár, pénztár
-data/products.js      termékkatalógus (név, márka, ár, akciós ár, méretek, kép, kategória)
+data/home.js          a főoldalhoz szükséges kis fájl: kategóriák, darabszámok, kiemelt termékek, adatdátum
+data/cat/<id>.js      főkategóriánkénti termékkatalógus, csak az adott kategória megnyitásakor töltődik be
+data/search.js        keresőindex, az első kereséskor töltődik be
+data/idmap.js         melyik termék melyik kategóriafájlban van (termékoldal, kosár, kedvencek)
 data/details/*.js     termékleírások + galériák, 128 darabban, igény szerint töltődnek
 scripts/              adatgyűjtő és összeállító szkriptek
 ```

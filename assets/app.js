@@ -1,7 +1,16 @@
-/* Kangaboo – újratervezett webshop (bemutató). Adatok: data/products.js (window.KB) */
+/* Kangaboo – újratervezett webshop (bemutató). Adatok: data/home.js (főoldal), data/cat/*.js, data/search.js, data/idmap.js (igény szerint) */
 (function(){
 'use strict';
-const KB = window.KB || {tops:[],products:[],featured:[]};
+const KB = window.KB_HOME || {tops:[],topN:{},subN:{},popular:[],deals:[],news:[],mega:{},topBrands:[],total:0,saleCount:0,brandCount:0};
+// <script> alapú betöltő: fájlból (file://) megnyitva is működik, ahol a fetch nem
+const LOADS={};
+function loadScript(src){
+  return LOADS[src]||(LOADS[src]=new Promise((res,rej)=>{
+    const s=document.createElement('script'); s.src=src; s.async=true;
+    s.onload=()=>res(); s.onerror=()=>{ delete LOADS[src]; s.remove(); rej(new Error(src)); };
+    document.head.appendChild(s);
+  }));
+}
 const DET = {}; const DCH = {}; const NCH = 128;
 window.KB_DET = (c,data) => { Object.assign(DET,data); (DCH[c]||{}).done=true; ((DCH[c]||{}).cbs||[]).forEach(f=>f()); };
 function loadDetails(id){
@@ -49,23 +58,47 @@ const TOPMETA = {
 const TOP = {}, SUB = {}, SUB2TOP = {};
 KB.tops.forEach(t=>{ TOP[t.id]=t; t.meta=TOPMETA[t.id]||{i:'c-gift',bg:'var(--sand)',fg:'var(--ink)',d:''}; t.subs.forEach(s=>{SUB[s.id]=s;SUB2TOP[s.id]=t.id;}); });
 
-/* ---------- products ---------- */
-const P = KB.products;
-const BYID = {};
-P.forEach((p,idx)=>{
-  p.k=idx; BYID[p.i]=p;
+/* ---------- products (igény szerint betöltve) ---------- */
+const BYID = {};            // id -> termék (minden eddig betöltött)
+const TOPLIST = {};         // főkategória -> termékek, eredeti sorrendben
+let ALL = null, SEARCH = null, IDMAP = null, BRANDS = null;
+function reg(p){
+  if(BYID[p.i]) return BYID[p.i];
   p.t=[...new Set((p.c||[]).map(c=>SUB2TOP[c]).filter(Boolean))];
   p.d=p.o&&p.p? Math.round((1-p.p/p.o)*100):0;
   p._s=norm(p.b+' '+p.n);
-});
+  return BYID[p.i]=p;
+}
+['popular','deals','news'].forEach(k=>KB[k]=(KB[k]||[]).map(reg));
+Object.keys(KB.mega||{}).forEach(t=>KB.mega[t]=KB.mega[t].map(reg));
+window.KB_CAT=(tid,list)=>{ TOPLIST[tid]=list.map(reg); };
+window.KB_SEARCH=rows=>{ SEARCH=rows.map(r=>({i:r[0],n:r[1],b:r[2],p:r[3],t:[...r[4]].map(x=>KB.tops[+x].id),_s:norm(r[2]+' '+r[1])})); };
+window.KB_IDMAP=m=>{ IDMAP=m; };
+const ensureTop=tid=>TOP[tid]?(TOPLIST[tid]?Promise.resolve():loadScript('data/cat/'+tid+'.js')):Promise.resolve();
+const ensureTops=ids=>Promise.all([...new Set(ids)].map(ensureTop));
+const ensureAll=()=>ensureTops(KB.tops.map(t=>t.id)).then(()=>{ if(!ALL) ALL=Object.values(BYID).sort((a,b)=>a.k-b.k); return ALL; });
+const ensureSearch=()=>SEARCH?Promise.resolve():loadScript('data/search.js');
+const ensureIdmap=()=>IDMAP?Promise.resolve():loadScript('data/idmap.js');
+const topsOf=id=>[...((IDMAP&&IDMAP.t[id])||'')].map(x=>KB.tops[+x].id);
+const ensureProducts=ids=>ensureIdmap().then(()=>ensureTops(ids.flatMap(topsOf)));
+function brandMap(){
+  if(BRANDS) return BRANDS;
+  BRANDS={}; (ALL||[]).forEach(p=>{ if(!p.b) return; const k=p.b.toUpperCase(); (BRANDS[k]=BRANDS[k]||{name:p.b,n:0}).n++; });
+  return BRANDS;
+}
 const img = p => p && p.m ? (p.m.startsWith('http')?p.m:IMGBASE+p.m) : '';
-const topCount = id => P.filter(p=>p.t.includes(id)).length;
-const subCount = {}; P.forEach(p=>(p.c||[]).forEach(c=>subCount[c]=(subCount[c]||0)+1));
-const brandMap = {}; P.forEach(p=>{ if(!p.b) return; const k=p.b.toUpperCase(); (brandMap[k]=brandMap[k]||{name:p.b,n:0}).n++; });
+const topCount = id => KB.topN[id]||0;
+const subCount = KB.subN||{};
 
 /* ---------- state: cart & favourites ---------- */
-let cart = store.get('cart',[]).filter(x=>BYID[x.id]);
-let favs = new Set(store.get('favs',[]).filter(id=>BYID[id]));
+let cart = store.get('cart',[]).filter(x=>x&&x.id&&x.q>0);
+let favs = new Set(store.get('favs',[]));
+// betöltés után: a már nem létező termékek kiszűrése
+function pruneState(){
+  if(!IDMAP) return;
+  const c=cart.filter(x=>IDMAP.t[x.id]); if(c.length!==cart.length){ cart=c; saveCart(); }
+  const f=[...favs].filter(id=>IDMAP.t[id]); if(f.length!==favs.size){ favs=new Set(f); saveFavs(); }
+}
 function saveCart(){ store.set('cart',cart); badge(); }
 function saveFavs(){ store.set('favs',[...favs]); badge(); }
 function badge(){
@@ -125,7 +158,7 @@ function buildNav(){
   const show=id=>{
     const t=TOP[id]; if(!t) return;
     $$('.mega-tops a').forEach(a=>a.classList.toggle('on',a.dataset.top===id));
-    const feat=P.filter(p=>p.t.includes(id)&&p.m&&p.d>0).sort((a,b)=>b.d-a.d).slice(0,4);
+    const feat=(KB.mega||{})[id]||[];
     pane.innerHTML=`<h3>${esc(t.name)} <a href="#/kategoria/${t.id}">Összes termék (${topCount(t.id)}) →</a></h3>
       <div class="mega-subs">${t.subs.map(s=>`<a href="#/kategoria/${t.id}/${s.id}">${esc(s.name)}<span>${subCount[s.id]||0}</span></a>`).join('')}</div>
       ${feat.length?`<div class="mega-feat">${feat.map(p=>`<a href="#/termek/${p.i}"><img src="${esc(img(p))}" alt="" loading="lazy" onerror="this.remove()"><div><b>${esc(p.n)}</b><span>${ft(p.p)} · −${p.d}%</span></div></a>`).join('')}</div>`:''}`;
@@ -146,8 +179,14 @@ window.toggleDrawer = o => { const d=$('#drawer'); d.classList.toggle('open',o);
 /* ---------- search ---------- */
 function searchP(q){
   const toks=norm(q).split(/\s+/).filter(Boolean);
-  if(!toks.length) return [];
-  return P.filter(p=>toks.every(t=>p._s.includes(t)));
+  if(!toks.length||!SEARCH) return [];
+  return SEARCH.filter(p=>toks.every(t=>p._s.includes(t)));
+}
+let SBRANDS=null;
+function searchBrands(){
+  if(SBRANDS) return SBRANDS;
+  const m={}; (SEARCH||[]).forEach(p=>{ if(!p.b) return; const k=p.b.toUpperCase(); (m[k]=m[k]||{name:p.b,n:0}).n++; });
+  return SBRANDS=Object.values(m);
 }
 function hl(text,q){
   let out=esc(text);
@@ -163,18 +202,23 @@ function buildSearch(){
   const render=()=>{
     const v=q.value.trim();
     if(v.length<2){ sg.hidden=true; return; }
+    if(!SEARCH){
+      sg.innerHTML='<div class="sg-title" aria-live="polite">Keresés betöltése…</div>'; sg.hidden=false;
+      ensureSearch().then(render,()=>{ sg.innerHTML='<div class="sg-title">A keresés most nem érhető el.</div>'; });
+      return;
+    }
     const res=searchP(v);
-    const brands=Object.values(brandMap).filter(b=>norm(b.name).includes(norm(v))).slice(0,3);
+    const brands=searchBrands().filter(b=>norm(b.name).includes(norm(v))).slice(0,3);
     const cats=KB.tops.flatMap(t=>t.subs.map(s=>({t,s}))).filter(x=>norm(x.s.name).includes(norm(v))).slice(0,3);
     sg.innerHTML=
       (cats.length?`<div class="sg-title">Kategóriák</div>`+cats.map(x=>`<a href="#/kategoria/${x.t.id}/${x.s.id}"><span class="ph" style="display:grid;place-items:center;background:${x.t.meta.bg};color:${x.t.meta.fg}">${icon(x.t.meta.i)}</span><div><div class="sn">${hl(x.s.name,v)}</div><div class="sp">${esc(x.t.name)}</div></div></a>`).join(''):'')+
       (brands.length?`<div class="sg-title">Márkák</div>`+brands.map(b=>`<a href="#/marka/${encodeURIComponent(b.name)}"><span class="ph" style="display:grid;place-items:center;font-family:var(--serif);font-weight:700">${esc(b.name[0])}</span><div><div class="sn">${hl(b.name,v)}</div><div class="sp">${b.n} termék</div></div></a>`).join(''):'')+
-      (res.length?`<div class="sg-title">Termékek</div>`+res.slice(0,6).map(p=>`<a href="#/termek/${p.i}">${p.m?`<img src="${esc(img(p))}" alt="" onerror="this.remove()">`:'<span class="ph"></span>'}<div><div class="sn">${hl(p.n,v)}</div><div class="sp">${esc(p.b)} · ${ft(p.p)}</div></div></a>`).join(''):'')+
+      (res.length?`<div class="sg-title">Termékek</div>`+res.slice(0,6).map(r=>{const p=BYID[r.i]||r;return `<a href="#/termek/${p.i}">${p.m?`<img src="${esc(img(p))}" alt="" onerror="this.remove()">`:'<span class="ph"></span>'}<div><div class="sn">${hl(p.n,v)}</div><div class="sp">${esc(p.b)} · ${ft(p.p)}</div></div></a>`}).join(''):'')+
       `<a class="all" href="#/kereses?q=${encodeURIComponent(v)}">${res.length?`Mind a ${res.length} találat megtekintése →`:'Nincs találat – keresés újra'}</a>`;
     sg.hidden=false; sel=-1;
   };
   let deb; q.addEventListener('input',()=>{clearTimeout(deb);deb=setTimeout(render,120)});
-  q.addEventListener('focus',render);
+  q.addEventListener('focus',()=>{ ensureSearch().catch(()=>{}); render(); });
   q.addEventListener('keydown',e=>{
     const links=$$('a',sg); if(sg.hidden||!links.length) return;
     if(e.key==='ArrowDown'||e.key==='ArrowUp'){ e.preventDefault(); sel=(sel+(e.key==='ArrowDown'?1:-1)+links.length)%links.length; links.forEach((a,i)=>a.classList.toggle('on',i===sel)); }
@@ -248,11 +292,7 @@ const railNav = id => `<div class="rail-nav"><button aria-label="Előző" onclic
 
 /* ---------- pages ---------- */
 function pageHome(){
-  const featured=(KB.featured||[]).map(id=>BYID[id]).filter(Boolean);
-  const popular=featured.length>=4?featured:P.filter(p=>p.m).slice(0,12);
-  const news=P.filter(p=>p.w&&p.m).slice(0,16);
-  const deals=P.filter(p=>p.d>0&&p.m).sort((a,b)=>b.d-a.d).slice(0,16);
-  const topBrands=Object.values(brandMap).sort((a,b)=>b.n-a.n).slice(0,10);
+  const popular=KB.popular, news=KB.news, deals=KB.deals, topBrands=KB.topBrands;
   const promoImg=f=>'https://kangaboo.hu/image/cache/data/IAKCIO/'+f;
   const active=activePromos();
   const heroPref=['CYBEX','HAPPY HORSE','NATTOU'];
@@ -263,13 +303,13 @@ function pageHome(){
     <div class="fade-in">
       <span class="eyebrow">Babaáruházak és webshop</span>
       <h1>Minden, ami az <em>első évekhez</em> kell – egy helyen.</h1>
-      <p class="lead">Babaruha, kismama termékek, babakocsik, autósülések és játékok ${Object.keys(brandMap).length} márkától. Webshopban és 6 áruházunkban, szakértő tanácsadással.</p>
+      <p class="lead">Babaruha, kismama termékek, babakocsik, autósülések és játékok ${KB.brandCount} márkától. Webshopban és 6 áruházunkban, szakértő tanácsadással.</p>
       <div class="ctas"><a href="#/kategoriak" class="btn btn-primary">Vásárlás indítása ${icon('i-arrow','sm')}</a><a href="#/akciok" class="btn btn-ghost">Aktuális akciók</a></div>
-      <div class="stats"><div><strong>${P.length.toLocaleString('hu-HU')}</strong><span>termék a kínálatban</span></div><div><strong>6</strong><span>áruház országszerte</span></div><div><strong>0% THM</strong><span>MilPay részletfizetés</span></div></div>
+      <div class="stats"><div><strong>${KB.total.toLocaleString('hu-HU')}</strong><span>termék a kínálatban</span></div><div><strong>6</strong><span>áruház országszerte</span></div><div><strong>0% THM</strong><span>MilPay részletfizetés</span></div></div>
     </div>
     <div class="collage fade-in">
       ${heroTiles.map((x,i)=>`<a href="${x.href}" class="tile ${i?'':'t1'}" style="background:${['var(--blush)','var(--sky)','var(--sage-l)'][i]}"><img src="${esc(x.src)}" alt="${esc(x.alt)}" ${x.contain?'style="object-fit:contain;background:#fff;padding:12px"':''} onerror="this.remove()"></a>`).join('')}
-      <div class="ribbon">${P.filter(p=>p.d>0).length} akciós termék</div>
+      <div class="ribbon">${KB.saleCount} akciós termék</div>
       <div class="float-card"><div class="fi">${icon('i-store')}</div><div><b>Rendeld online, vedd át ingyen</b><span>1–3 munkanapon belül, bármelyik áruházunkban</span></div></div>
     </div>
   </div></section>
@@ -455,7 +495,8 @@ function catHero(t,title,sub,n){
 function pageCategory(tid,sid){
   const t=TOP[tid]; if(!t) return page404();
   const s=sid?SUB[sid]:null; if(sid&&!s) return page404();
-  const base=P.filter(p=>s?(p.c||[]).includes(sid):p.t.includes(tid));
+  if(!TOPLIST[tid]) return need(()=>ensureTop(tid),()=>pageCategory(tid,sid),'list');
+  const base=TOPLIST[tid].filter(p=>s?(p.c||[]).includes(sid):true);
   document.title=(s?s.name:t.name)+' – Kangaboo';
   const chips=[{label:'Összes',n:topCount(tid),href:'#/kategoria/'+tid,on:!sid},...t.subs.filter(x=>subCount[x.id]).map(x=>({label:x.name,n:subCount[x.id]||0,href:`#/kategoria/${tid}/${x.id}`,on:x.id===sid}))];
   listing({key:'cat'+tid+'/'+(sid||''),head:catHero(t,s?s.name:t.name,!!s,base.length),base,chips});
@@ -468,24 +509,27 @@ function topChips(base,href){
   return KB.tops.filter(t=>c[t.id]).map(t=>({label:t.name,n:c[t.id],href:href(t.id),on:false}));
 }
 function pageSale(q){
-  const tf=q.get('k'); let base=P.filter(p=>p.d>0);
+  if(!ALL) return need(ensureAll,()=>pageSale(q),'list');
+  const tf=q.get('k'); let base=ALL.filter(p=>p.d>0);
   const all=base; if(tf) base=base.filter(p=>p.t.includes(tf));
   document.title='Akciók – Kangaboo';
   const chips=[{label:'Összes',n:all.length,href:'#/akciok',on:!tf},...topChips(all,id=>'#/akciok?k='+id).map(c=>({...c,on:c.href.endsWith('='+tf)}))];
   listing({key:'sale'+tf,head:simpleHead('Akciós termékek',`${all.length} termék kedvezményes áron, akár ${Math.max(0,...all.map(p=>p.d))}% kedvezménnyel. Az akciók a készlet erejéig érvényesek.`,[['Akciók']],'Akciók'),base,chips,defaultSort:'disc'});
 }
 function pageNew(q){
-  const tf=q.get('k'); let base=P.filter(p=>p.w);
+  if(!ALL) return need(ensureAll,()=>pageNew(q),'list');
+  const tf=q.get('k'); let base=ALL.filter(p=>p.w);
   const all=base; if(tf) base=base.filter(p=>p.t.includes(tf));
   document.title='Újdonságok – Kangaboo';
   const chips=[{label:'Összes',n:all.length,href:'#/ujdonsagok',on:!tf},...topChips(all,id=>'#/ujdonsagok?k='+id).map(c=>({...c,on:c.href.endsWith('='+tf)}))];
   listing({key:'new'+tf,head:simpleHead('Újdonságok',`${all.length} frissen érkezett termék a teljes kínálatból.`,[['Újdonságok']],'Frissen érkezett'),base,chips});
 }
 function pageBrand(name,q){
-  const k=name.toUpperCase(); const all=P.filter(p=>(p.b||'').toUpperCase()===k);
+  if(!ALL) return need(ensureAll,()=>pageBrand(name,q),'list');
+  const k=name.toUpperCase(); const all=ALL.filter(p=>(p.b||'').toUpperCase()===k);
   if(!all.length) return page404('Ez a márka jelenleg nem elérhető.');
   const tf=q.get('k'); const base=tf?all.filter(p=>p.t.includes(tf)):all;
-  const disp=brandMap[k]?.name||name;
+  const disp=brandMap()[k]?.name||name;
   document.title=disp+' – Kangaboo';
   const chips=[{label:'Összes',n:all.length,href:'#/marka/'+encodeURIComponent(name),on:!tf},...topChips(all,id=>`#/marka/${encodeURIComponent(name)}?k=${id}`).map(c=>({...c,on:c.href.endsWith('='+tf)}))];
   const promo=activePromos().find(p=>p[0]===k);
@@ -499,7 +543,10 @@ function pageSearch(q){
     <div class="chips" style="margin-top:20px">${['babakocsi','autósülés','rugdalózó','etetőszék','mellszívó','kiságy','body','cipő'].map(w=>`<a class="chip" href="#/kereses?q=${encodeURIComponent(w)}">${w}</a>`).join('')}</div></div>`;
     return;
   }
-  const base=searchP(v);
+  if(!SEARCH) return need(ensureSearch,()=>pageSearch(q),'list');
+  const rows=searchP(v); const need_t=[...new Set(rows.flatMap(r=>r.t))];
+  if(!need_t.every(t=>TOPLIST[t])) return need(()=>ensureTops(need_t),()=>pageSearch(q),'list');
+  const base=rows.map(r=>BYID[r.i]).filter(Boolean);
   const head=simpleHead(`„${v}”`,`${base.length} találat`,[['Keresés','#/kereses'],[v]],'Keresési eredmények')+
     `<div class="wrap"><form class="search" style="max-width:640px;margin-bottom:6px" onsubmit="event.preventDefault();go('#/kereses?q='+encodeURIComponent(this.q.value))"><input type="search" name="q" value="${esc(v)}" aria-label="Keresés"><button aria-label="Keresés">${icon('i-search')}</button></form></div>`;
   if(!base.length){ app.innerHTML=head+`<div class="wrap" style="padding:20px 0 90px"><div class="empty">${icon('i-search')}<h3>Nincs találat</h3><p>Próbálj általánosabb kifejezést, vagy böngéssz a kategóriák között.</p><a class="btn btn-primary" href="#/kategoriak">Kategóriák</a></div></div>`; return; }
@@ -507,7 +554,7 @@ function pageSearch(q){
 }
 function pageAllCats(){
   document.title='Kategóriák – Kangaboo';
-  app.innerHTML=simpleHead('Termékkategóriák',`${P.length.toLocaleString('hu-HU')} termék ${KB.tops.length} főkategóriában.`,[['Kategóriák']],'Termékeink')+
+  app.innerHTML=simpleHead('Termékkategóriák',`${KB.total.toLocaleString('hu-HU')} termék ${KB.tops.length} főkategóriában.`,[['Kategóriák']],'Termékeink')+
   `<div class="wrap" style="padding-bottom:90px;display:grid;gap:22px">${KB.tops.map(t=>`<div class="info-card" style="grid-template-columns:auto 1fr;gap:22px;align-items:start">
     <a href="#/kategoria/${t.id}" class="ui" style="width:72px;height:72px;border-radius:20px;background:${t.meta.bg};color:${t.meta.fg}">${icon(t.meta.i)}</a>
     <div><h3><a href="#/kategoria/${t.id}">${esc(t.name)}</a> <span class="muted" style="font-family:var(--sans);font-size:.85rem;font-weight:500">${topCount(t.id)} termék</span></h3><p style="margin:4px 0 12px">${esc(t.meta.d)}</p>
@@ -515,7 +562,8 @@ function pageAllCats(){
 }
 function pageBrands(){
   document.title='Márkák – Kangaboo';
-  const list=Object.values(brandMap).sort((a,b)=>a.name.localeCompare(b.name,'hu'));
+  if(!ALL) return need(ensureAll,pageBrands,'list');
+  const list=Object.values(brandMap()).sort((a,b)=>a.name.localeCompare(b.name,'hu'));
   const groups={}; list.forEach(b=>{let L0=norm(b.name[0]).toUpperCase(); if(!/[A-Z]/.test(L0)) L0='#'; (groups[L0]=groups[L0]||[]).push(b);});
   const top=[...list].sort((a,b)=>b.n-a.n).slice(0,12);
   app.innerHTML=simpleHead('Márkáink',`${list.length} márka a Kangaboo kínálatában – a legnépszerűbbektől a különlegességekig.`,[['Márkák']],'Márkák')+
@@ -528,20 +576,20 @@ function pageBrands(){
 
 /* ---------- product page ---------- */
 function pageProduct(id){
+  if(!IDMAP||!topsOf(id).every(t=>TOPLIST[t])) return need(()=>ensureProducts([id]),()=>pageProduct(id),'product');
   const p=BYID[id]; if(!p) return page404('A keresett termék nem található.');
+  const brandIds=(IDMAP.b[p.b]||[]);
+  if(!brandIds.every(x=>BYID[x])) return need(()=>ensureProducts(brandIds),()=>pageProduct(id),'product');
   const c=(+id)%NCH;
-  if(!(DCH[c]&&DCH[c].done)){
-    app.innerHTML=`<div class="wrap" style="padding:120px 0;text-align:center" aria-busy="true"><span class="muted">Betöltés…</span></div>`;
-    loadDetails(id).then(()=>{ if(location.hash.split('?')[0]==='#/termek/'+id) pageProduct(id); });
-    return;
-  }
+  if(!(DCH[c]&&DCH[c].done)) return need(()=>loadDetails(id),()=>pageProduct(id),'product');
   const d=DET[id]||{};
   const t=TOP[p.t[0]], s=SUB[(p.c||[])[0]];
   document.title=p.n+' – Kangaboo';
   const gal=(d.g&&d.g.length)?d.g.map(g=>g.startsWith('http')?g:IMGBASE+g):[img(p)].filter(Boolean);
   const sale=p.o&&p.o>p.p;
-  const related=P.filter(x=>x.i!==p.i&&(x.c||[]).some(c=>(p.c||[]).includes(c))).sort((a,b)=>((b.b===p.b)-(a.b===p.b))||a.k-b.k).slice(0,12);
-  const sameBrand=P.filter(x=>x.i!==p.i&&x.b===p.b).slice(0,12);
+  const pool=[...new Set(p.t.flatMap(t=>TOPLIST[t]||[]))].sort((a,b)=>a.k-b.k);
+  const related=pool.filter(x=>x.i!==p.i&&(x.c||[]).some(c=>(p.c||[]).includes(c))).sort((a,b)=>((b.b===p.b)-(a.b===p.b))||a.k-b.k).slice(0,12);
+  const sameBrand=brandIds.map(x=>BYID[x]).filter(x=>x&&x.i!==p.i).slice(0,12);
   const ph=icon(t?.meta.i||'c-gift','ph-art');
   app.innerHTML=`<div class="wrap">
   ${crumbs([...(t?[[t.name,'#/kategoria/'+t.id]]:[]),...(s?[[s.name,`#/kategoria/${t.id}/${s.id}`]]:[]),[p.n]])}
@@ -600,6 +648,7 @@ function pageProduct(id){
 const SHIP={pickup:['Átvétel áruházban',0],gls_pt:['GLS csomagpont',1190],mpl_pt:['MPL csomagautomata / pont',1290],gls:['GLS házhozszállítás',1590],mpl:['MPL házhozszállítás',2990]};
 function pageCart(){
   document.title='Kosár – Kangaboo';
+  if(cart.length&&!cart.every(x=>BYID[x.id])) return need(()=>ensureProducts(cart.map(x=>x.id)).then(pruneState),pageCart,'list');
   const items=cart.map(x=>({...x,p:BYID[x.id]})).filter(x=>x.p);
   if(!items.length){
     app.innerHTML=simpleHead('Kosár','',[['Kosár']])+`<div class="wrap" style="padding-bottom:90px"><div class="empty">${icon('i-bag')}<h3>A kosarad üres</h3><p>Nézz körül kategóriáink között, vagy válogass aktuális akcióinkból.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a class="btn btn-primary" href="#/kategoriak">Vásárlás</a><a class="btn btn-ghost" href="#/akciok">Akciók</a></div></div></div>`;
@@ -633,6 +682,7 @@ function pageCart(){
 }
 function pageFavs(){
   document.title='Kedvencek – Kangaboo';
+  if(favs.size&&![...favs].every(id=>BYID[id])) return need(()=>ensureProducts([...favs]).then(pruneState),pageFavs,'list');
   const list=[...favs].map(id=>BYID[id]).filter(Boolean);
   app.innerHTML=simpleHead('Kedvenceim',list.length?`${list.length} mentett termék`:'',[['Kedvencek']])+`<div class="wrap" style="padding-bottom:90px">${list.length?`<div class="products">${list.map(card).join('')}</div>`:`<div class="empty">${icon('i-heart')}<h3>Még nincs kedvenced</h3><p>Kattints a szív ikonra bármelyik terméknél, hogy később könnyen megtaláld.</p><a class="btn btn-primary" href="#/kategoriak">Böngészés</a></div>`}</div>`;
 }
@@ -643,6 +693,7 @@ function pageFavs(){
 const PAY={card:['Bankkártya / OTP SimplePay',0],milpay:['MilPay részletfizetés (0% THM)',0],cod:['Utánvét',590],store:['Fizetés az áruházban',0]};
 function pageCheckout(){
   document.title='Pénztár – Kangaboo';
+  if(cart.length&&!cart.every(x=>BYID[x.id])) return need(()=>ensureProducts(cart.map(x=>x.id)).then(pruneState),pageCheckout,'list');
   const items=cart.map(x=>({...x,p:BYID[x.id]})).filter(x=>x.p);
   if(!items.length){ go('#/kosar'); return; }
   const f=store.get('checkout',{});
@@ -799,8 +850,25 @@ function page404(msg){
   app.innerHTML=`<div class="wrap" style="padding:80px 0 100px"><div class="empty">${icon('i-search')}<h3>Az oldal nem található</h3><p>${esc(msg||'A keresett oldal nem létezik vagy áthelyeztük.')}</p><a class="btn btn-primary" href="#/">Vissza a főoldalra</a></div></div>`;
 }
 
+/* ---------- betöltés: váz és hibaállapot ---------- */
+let SEQ=0;
+function need(load,render,kind){
+  const my=SEQ; app.innerHTML=skeleton(kind); app.setAttribute('aria-busy','true');
+  load().then(()=>{ if(my===SEQ){ app.removeAttribute('aria-busy'); render(); } },
+              ()=>{ if(my===SEQ){ app.removeAttribute('aria-busy'); loadError(); } });
+}
+function skeleton(kind){
+  const card='<div class="sk-card"><div class="sk sk-img"></div><div class="sk sk-line"></div><div class="sk sk-line short"></div></div>';
+  if(kind==='product') return `<div class="wrap" aria-busy="true"><span class="sr-only">Betöltés…</span><div class="sk sk-crumb"></div><div class="pdp"><div class="sk" style="aspect-ratio:1/1;border-radius:24px"></div><div><div class="sk sk-line short"></div><div class="sk sk-title"></div><div class="sk sk-title" style="width:60%"></div><div class="sk sk-line" style="width:40%;height:28px;margin-top:22px"></div><div class="sk" style="height:52px;border-radius:999px;margin-top:26px"></div></div></div></div>`;
+  return `<div class="wrap" aria-busy="true"><span class="sr-only">Betöltés…</span><div class="sk sk-crumb"></div><div class="sk sk-hero"></div><div class="products" style="margin:28px 0 90px">${card.repeat(8)}</div></div>`;
+}
+function loadError(){
+  app.innerHTML=`<div class="wrap" style="padding:80px 0 100px"><div class="empty" role="alert">${icon('i-search')}<h3>Az adatok betöltése nem sikerült</h3><p>Ellenőrizd az internetkapcsolatot, majd próbáld újra.</p><button class="btn btn-primary" onclick="location.reload()">Újrapróbálás</button></div></div>`;
+}
+
 /* ---------- router ---------- */
 function route(){
+  SEQ++; app.removeAttribute('aria-busy');
   const h=location.hash.replace(/^#\/?/,'');
   const [path,qs]=h.split('?');
   const q=new URLSearchParams(qs||'');

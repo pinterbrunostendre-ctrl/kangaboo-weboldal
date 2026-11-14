@@ -23,9 +23,49 @@ ASOF=datetime.date.fromtimestamp(os.path.getmtime(os.path.join(R,'products.json'
 home=open(os.path.join(R,'home.html'),encoding='utf-8').read()
 feat=list(dict.fromkeys(re.findall(r'product-info-(\d+)',home)))
 os.makedirs(OUT,exist_ok=True)
-with open(os.path.join(OUT,'products.js'),'w') as f:
-    f.write('window.KB=');json.dump({'tops':tops,'products':P,'featured':feat,'asof':ASOF},f,ensure_ascii=False,separators=(',',':'));f.write(';')
-print(len(P),'products',len(feat),'featured',os.path.getsize(os.path.join(OUT,'products.js'))//1024,'KB')
+J=lambda o: json.dumps(o,ensure_ascii=False,separators=(',',':'))
+def W(name,txt):
+    fp=os.path.join(OUT,name); os.makedirs(os.path.dirname(fp),exist_ok=True)
+    open(fp,'w').write(txt); return os.path.getsize(fp)
+# régi egyben lévő katalógus helyett részekre bontott fájlok
+if os.path.exists(os.path.join(OUT,'products.js')): os.remove(os.path.join(OUT,'products.js'))
+SUB2TOP={s['id']:t['id'] for t in tops for s in t['subs']}
+TOPIDX={t['id']:i for i,t in enumerate(tops)}
+for k,p in enumerate(P):
+    p['k']=k
+    p['_t']=list(dict.fromkeys(SUB2TOP[c] for c in p['c'] if c in SUB2TOP))
+    p['_d']=int((1-p['p']/p['o'])*100+0.5) if p.get('o') and p.get('p') else 0
+pub=lambda p:{k:v for k,v in p.items() if not k.startswith('_')}
+byid={p['i']:p for p in P}
+# főoldal
+featured=[byid[i] for i in feat if i in byid]
+popular=featured if len(featured)>=4 else [p for p in P if p['m']][:12]
+deals=sorted([p for p in P if p['_d']>0 and p['m']],key=lambda p:-p['_d'])[:16]
+news=[p for p in P if p.get('w') and p['m']][:16]
+brands={}
+for p in P:
+    if p['b']: e=brands.setdefault(p['b'].upper(),{'name':p['b'],'n':0}); e['n']+=1
+topN={t['id']:sum(1 for p in P if t['id'] in p['_t']) for t in tops}
+subN={}
+for p in P:
+    for c in p['c']: subN[c]=subN.get(c,0)+1
+mega={t['id']:[pub(p) for p in sorted([p for p in P if t['id'] in p['_t'] and p['m'] and p['_d']>0],key=lambda p:-p['_d'])[:4]] for t in tops}
+home={'tops':tops,'asof':ASOF,'total':len(P),'saleCount':sum(1 for p in P if p['_d']>0),'brandCount':len(brands),
+      'topBrands':sorted(brands.values(),key=lambda b:-b['n'])[:10],'topN':topN,'subN':subN,
+      'popular':[pub(p) for p in popular],'deals':[pub(p) for p in deals],'news':[pub(p) for p in news],'mega':mega}
+sz={'home.js':W('home.js','window.KB_HOME='+J(home)+';')}
+for t in tops:
+    sz['cat/'+t['id']+'.js']=W('cat/'+t['id']+'.js',f"KB_CAT('{t['id']}',"+J([pub(p) for p in P if t['id'] in p['_t']])+');')
+# keresőindex: [id, név, márka, ár, főkategória-indexek]
+sz['search.js']=W('search.js','KB_SEARCH('+J([[p['i'],p['n'],p['b'],p['p'],''.join(str(TOPIDX[x]) for x in p['_t'])] for p in P])+');')
+# termék -> főkategória(k), és márkánként az első 13 termék (a "márka további termékei" sávhoz)
+first={}
+for p in P:
+    if p['b']:
+        l=first.setdefault(p['b'],[])
+        if len(l)<13: l.append(p['i'])
+sz['idmap.js']=W('idmap.js','KB_IDMAP('+J({'t':{p['i']:''.join(str(TOPIDX[x]) for x in p['_t']) for p in P},'b':first})+');')
+print(len(P),'products'); [print(f'  {k}: {v//1024} KB') for k,v in sz.items()]
 print('with sizes',sum(1 for p in P if p.get('s')),'new',sum(1 for p in P if p.get('w')),'sale',sum(1 for p in P if p.get('o')),'noimg',sum(1 for p in P if not p['m']))
 
 dp=os.path.join(R,'details.json'); det=json.load(open(dp)) if os.path.exists(dp) else {}
