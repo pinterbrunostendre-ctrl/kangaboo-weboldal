@@ -18,7 +18,7 @@
   --radius:20px; --radius-s:12px;
   --shadow:0 1px 2px rgba(74,36,76,.04),0 8px 24px rgba(74,36,76,.06);
   --shadow-h:0 2px 4px rgba(74,36,76,.06),0 18px 40px rgba(74,36,76,.12);
-  --serif:"Fraunces",Georgia,serif; --sans:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;
+  --serif:"Nunito",var(--sans); --sans:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;
   --wrap:1280px; --demo-h:0px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -29,7 +29,7 @@ a{color:inherit;text-decoration:none}
 button,input,select,textarea{font:inherit;color:inherit}
 main{min-height:60vh;outline:none}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
-h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;letter-spacing:-.01em}
+h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.15;letter-spacing:-.015em}
 .eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--coral-text)}
 .muted{color:var(--muted)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.45rem;border-radius:999px;font-weight:600;font-size:.94rem;border:1.5px solid transparent;cursor:pointer;transition:.2s ease;white-space:nowrap}
@@ -71,7 +71,7 @@ header.site.scrolled{border-color:var(--line);box-shadow:0 6px 24px rgba(74,36,7
 .hdr{display:flex;align-items:center;gap:32px;height:78px}
 .logo{display:flex;align-items:center;flex-shrink:0}
 .logo img{height:42px;width:auto}
-.wordmark{font-family:var(--serif);font-size:1.7rem;font-weight:700;letter-spacing:-.02em}
+.wordmark{font-family:var(--serif);font-size:1.7rem;font-weight:800;letter-spacing:-.02em}
 .wordmark em{font-style:normal;color:var(--coral-text)}
 .search{flex:1;max-width:560px;position:relative}
 .search input{width:100%;height:48px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);padding:0 52px 0 22px;font-size:.92rem;outline:none;transition:.2s}
@@ -250,7 +250,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .hero p.lead{font-size:1.1rem;color:var(--ink-2);max-width:520px}
 .hero .ctas{display:flex;gap:12px;margin-top:2rem;flex-wrap:wrap}
 .hero .stats{display:flex;gap:40px;margin-top:2.6rem;padding-top:1.8rem;border-top:1px solid var(--line);flex-wrap:wrap}
-.hero .stats strong{display:block;font-family:var(--serif);font-size:1.9rem;font-weight:600}
+.hero .stats strong{display:block;font-family:var(--serif);font-size:1.9rem;font-weight:800}
 .hero .stats span{font-size:.84rem;color:var(--muted)}
 .collage{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:16px;aspect-ratio:1/1}
 .collage .tile{border-radius:28px;overflow:hidden;background:var(--sand);position:relative;display:block}
@@ -328,10 +328,10 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .loyal p{color:var(--on-dark);max-width:380px}
 .loyal .eyebrow{color:var(--butter)}
 .card-visual{position:absolute;right:-30px;bottom:-30px;width:270px;height:170px;border-radius:20px;background:linear-gradient(135deg,var(--coral-d),var(--pink-d));transform:rotate(-10deg);box-shadow:0 30px 60px rgba(0,0,0,.35);padding:22px;display:flex;flex-direction:column;justify-content:space-between}
-.card-visual b{font-family:var(--serif);font-size:1.4rem}
+.card-visual b{font-family:var(--serif);font-weight:800;font-size:1.4rem}
 .card-visual span{font-size:.78rem;letter-spacing:.2em;opacity:.85}
 .loyal .pts{display:flex;align-items:baseline;gap:8px;margin:1.6rem 0;flex-wrap:wrap}
-.loyal .pts strong{font-family:var(--serif);font-size:3.2rem;color:var(--butter);line-height:1}
+.loyal .pts strong{font-family:var(--serif);font-weight:800;font-size:3.2rem;color:var(--butter);line-height:1}
 .news{background:var(--butter);border-radius:32px;padding:48px}
 .news h2{font-size:2.1rem;margin:.6rem 0 1rem}
 .news p{color:var(--ink-2)}
@@ -350,7 +350,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .brands .wrap{display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:space-between}
 .brands .lbl{font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .brands .list{display:flex;flex-wrap:wrap;gap:12px 38px;align-items:center;flex:1;justify-content:space-around}
-.brands .list a{font-family:var(--serif);font-size:1.3rem;font-weight:600;color:var(--muted);transition:.2s}
+.brands .list a{font-family:var(--serif);font-size:1.3rem;font-weight:800;color:var(--muted);transition:.2s}
 .brands .list a:hover{color:var(--ink)}
 
 /* Product page */
@@ -369,7 +369,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .pinfo h1{font-size:clamp(1.7rem,3vw,2.4rem);margin:.4rem 0 .9rem}
 .pinfo .sku{font-size:.8rem;color:var(--muted)}
 .pinfo .price{margin:18px 0 6px}
-.pinfo .price b{font-size:2rem;font-family:var(--serif);font-weight:600}
+.pinfo .price b{font-size:2rem;font-family:var(--serif);font-weight:800}
 .pinfo .price s{font-size:1.05rem}
 .save{display:inline-block;background:var(--blush);color:var(--coral-text);font-weight:700;font-size:.8rem;padding:4px 10px;border-radius:999px}
 .milpay-note{font-size:.84rem;color:var(--ink-2);margin-top:6px}
@@ -439,7 +439,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .az a{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:.85rem;background:#fff;border:1px solid var(--line)}
 .az a:hover{background:var(--ink);color:#fff}
 .bgroup{display:grid;grid-template-columns:80px 1fr;gap:20px;padding:22px 0;border-top:1px solid var(--line);scroll-margin-top:200px}
-.bgroup > b{font-family:var(--serif);font-size:2rem;color:var(--coral-text)}
+.bgroup > b{font-family:var(--serif);font-weight:800;font-size:2rem;color:var(--coral-text)}
 .blist{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 20px}
 .blist a{display:flex;justify-content:space-between;padding:6px 10px;border-radius:8px;font-size:.92rem}
 .blist a:hover{background:#fff;color:var(--coral-text)}
@@ -447,7 +447,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .topbrands{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:40px}
 .topbrands a{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 12px;text-align:center;transition:.2s}
 .topbrands a:hover{box-shadow:var(--shadow-h);border-color:transparent}
-.topbrands b{font-family:var(--serif);font-size:1.15rem;display:block}
+.topbrands b{font-family:var(--serif);font-weight:800;font-size:1.15rem;display:block}
 .topbrands span{font-size:.78rem;color:var(--muted)}
 
 /* Info pages */
@@ -716,8 +716,5 @@ body.mega-open .mega-scrim{opacity:1;visibility:visible;transition:opacity .18s}
 .mega-subs{grid-template-columns:repeat(2,1fr)}
 @media (min-width:1400px){.mega-subs{grid-template-columns:repeat(3,1fr)}}
 
-/* A4 (próba, csak a főoldalon): kerek, barátságos címsorok – Nunito 800 */
-body.font-trial #app h1,body.font-trial #app h2,body.font-trial #app h3{font-family:"Nunito",var(--sans);font-weight:800;letter-spacing:-.015em}
-body.font-trial #app .hero h1{letter-spacing:-.025em;line-height:1.08}
-body.font-trial #app .cat h3,body.font-trial #app .prod h3{font-family:var(--sans);font-weight:700;letter-spacing:0}
-body.font-trial #app .stats strong,body.font-trial #app .pts strong,body.font-trial #app .brands .list a{font-family:"Nunito",var(--sans);font-weight:800}
+/* A4: kerek, barátságos címsorok (Nunito 800) mindenhol */
+.hero h1{letter-spacing:-.025em;line-height:1.08}

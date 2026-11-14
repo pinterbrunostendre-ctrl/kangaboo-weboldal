@@ -959,7 +959,7 @@ function pageDemo(){
   </div>
   <div class="info-card">
     <h3>Mi változott a jelenlegi kangaboo.hu-hoz képest</h3>
-    ${li([`<b>Felépítés és megjelenés:</b> fehér alapon a Kangaboo logó telített színei (narancs, pink, napsárga, lime, égkék, lila). A navigáció alatt és a lábléc végén ötszínű csík fut, minden főkategóriának állandó színe van a lenyíló menüben, a kategórialistán és a kategóriaoldal fejlécében. A „Termékeink” lenyíló menü bal oldalán két oszlopban a főkategóriák, jobb oldalon az alkategóriák darabszámmal és a kategória négy kiemelt akciós terméke: elöl azok, amelyekhez részletes leírás és képgaléria tartozik, ezeken belül a nagyobb kedvezményűek.`,
+    ${li([`<b>Felépítés és megjelenés:</b> fehér alapon a Kangaboo logó telített színei (narancs, pink, napsárga, lime, égkék, lila), kerek, barátságos címsorbetűvel (Nunito). A navigáció alatt és a lábléc végén ötszínű csík fut, minden főkategóriának állandó színe van a lenyíló menüben, a kategórialistán és a kategóriaoldal fejlécében. A „Termékeink” lenyíló menü bal oldalán két oszlopban a főkategóriák, jobb oldalon az alkategóriák darabszámmal és a kategória négy kiemelt akciós terméke: elöl azok, amelyekhez részletes leírás és képgaléria tartozik, ezeken belül a nagyobb kedvezményűek.`,
       `<b>Terméklisták:</b> a jelenlegi oldal kategóriánként 37 terméket mutat oldalszámozással. Az új felület 24-esével tölti be a termékeket egy „Továbbiak betöltése” gombbal, és mutatja, hány termék látszik az összesből. Az Akciók oldal tetején az érvényes kampányok látszanak. Az Újdonságok alapsorrendje a „Legújabb elöl”: ez a termékazonosító szerinti csökkenő sorrend. Közelítés: feltételezi, hogy az újabb termékek nagyobb azonosítót kapnak (a terméklistákban dátum nem szerepel, az „Újdonság” jelölésű termékek viszont a legmagasabb azonosítók között sűrűsödnek).`,
       `<b>Keresés:</b> gépelés közben termékeket, kategóriákat és márkákat javasol, ékezetek nélkül is talál (pl. „cipo lany”), és a javaslatok nyilakkal is bejárhatók.`,
       `<b>Szűrők:</b> csak akciós termékek, csak újdonságok, ártartomány, márka (kereshető listával), méret, valamint hatféle rendezés. A bekapcsolt szűrők címkeként látszanak, egyenként törölhetők.`,
@@ -1078,8 +1078,6 @@ function route(){
   const [path,qs]=h.split('?');
   const q=new URLSearchParams(qs||'');
   const seg=path.split('/').filter(Boolean).map(decodeURIComponent);
-  // A4 próba: kerek, játékos címsor-betűtípus egyelőre csak a főoldalon
-  document.body.classList.toggle('font-trial',!seg[0]);
   document.title='Kangaboo – Baba- és gyermekáruház';
   $$('nav.main > .wrap > ul > li > a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#/'+seg[0]));
   switch(seg[0]){
