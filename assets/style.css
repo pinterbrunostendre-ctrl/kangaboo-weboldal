@@ -574,5 +574,7 @@ footer .wordmark em{color:var(--coral)}
 
 /* Bemutató jelzés */
 .demo-bar{position:sticky;top:0;z-index:70;background:var(--amber);color:var(--ink);font-size:.84rem;font-weight:700}
-.demo-bar .wrap{display:flex;align-items:center;justify-content:center;gap:8px;min-height:34px;padding-block:6px;text-align:center}
+.demo-bar .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 8px;min-height:34px;padding-block:6px;text-align:center}
 .demo-note{display:flex;gap:8px;align-items:flex-start;background:var(--butter);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:.84rem;font-weight:600;margin:0}
+.demo-bar .asof{font-weight:600}
+.demo-bar .asof::before{content:'· '}

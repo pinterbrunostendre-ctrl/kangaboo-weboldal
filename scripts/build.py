@@ -17,11 +17,14 @@ for p in prods:
     if any(l.lower().startswith('újdonság') for l in p.get('labels',[])): o['w']=1
     if p.get('sizes'): o['s']=p['sizes']
     P.append(o)
+import datetime
+# az adatgyűjtés napja = a terméklista-fájl utolsó módosítása
+ASOF=datetime.date.fromtimestamp(os.path.getmtime(os.path.join(R,'products.json'))).isoformat()
 home=open(os.path.join(R,'home.html'),encoding='utf-8').read()
 feat=list(dict.fromkeys(re.findall(r'product-info-(\d+)',home)))
 os.makedirs(OUT,exist_ok=True)
 with open(os.path.join(OUT,'products.js'),'w') as f:
-    f.write('window.KB=');json.dump({'tops':tops,'products':P,'featured':feat},f,ensure_ascii=False,separators=(',',':'));f.write(';')
+    f.write('window.KB=');json.dump({'tops':tops,'products':P,'featured':feat,'asof':ASOF},f,ensure_ascii=False,separators=(',',':'));f.write(';')
 print(len(P),'products',len(feat),'featured',os.path.getsize(os.path.join(OUT,'products.js'))//1024,'KB')
 print('with sizes',sum(1 for p in P if p.get('s')),'new',sum(1 for p in P if p.get('w')),'sale',sum(1 for p in P if p.get('o')),'noimg',sum(1 for p in P if not p['m']))
 

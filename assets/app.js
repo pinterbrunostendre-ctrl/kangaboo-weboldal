@@ -201,7 +201,13 @@ const STORES=[
  ['STOP.SHOP. Óbuda','800 m²','1037 Budapest, Bécsi út 136.','+36 30 565 3147',[9,20],[9,18],'xObuda-ss.jpg.pagespeed.ic.D9qs2bPwul.jpg'],
  ['Soroksár AUCHAN','480 m²','1239 Budapest, Bevásárló út 2.','+36 30 565 3538',[9,20],[9,19],'xSoroksar-ss_n.png.pagespeed.ic.D71g1ZZRHs.jpg'],
 ];
-const daysLeft=d=>Math.ceil((new Date(d+'T23:59:59')-new Date())/864e5);
+// naptári napok a kampány utolsó napjáig (0 = ma az utolsó nap, negatív = lejárt)
+const daysLeft=d=>{const t=new Date();t.setHours(0,0,0,0);return Math.round((new Date(d+'T00:00:00')-t)/864e5);};
+const activePromos=()=>PROMOS.filter(p=>daysLeft(p[3])>=0);
+const leftLabel=d=>{const n=daysLeft(d);return n===0?'Ma jár le':n===1?'Holnap jár le':`Még ${n} napig`;};
+const MONTHS=['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
+const huDate=iso=>{const [y,m,d]=iso.split('-').map(Number);return `${y}. ${MONTHS[m-1]} ${d}`;};
+const asofText=()=>KB.asof?`Árak és készlet: ${huDate(KB.asof)}${+KB.asof.slice(8)===1?'-jei':'-i'} állapot`:'';
 function storesHTML(){
   const now=new Date(),h=now.getHours()+now.getMinutes()/60,sun=now.getDay()===0;
   return `<div class="stores">${STORES.map(s=>{const hrs=sun?s[5]:s[4],open=h>=hrs[0]&&h<hrs[1];return `
@@ -248,6 +254,10 @@ function pageHome(){
   const deals=P.filter(p=>p.d>0&&p.m).sort((a,b)=>b.d-a.d).slice(0,16);
   const topBrands=Object.values(brandMap).sort((a,b)=>b.n-a.n).slice(0,10);
   const promoImg=f=>'https://kangaboo.hu/image/cache/data/IAKCIO/'+f;
+  const active=activePromos();
+  const heroPref=['CYBEX','HAPPY HORSE','NATTOU'];
+  const heroTiles=[...[...active].sort((x,y)=>{const i=heroPref.indexOf(x[0]),j=heroPref.indexOf(y[0]);return (i<0?9:i)-(j<0?9:j);}).map(p=>({href:'#/marka/'+encodeURIComponent(p[0]),src:promoImg(p[4]),alt:p[0]+' akció'})),
+    ...deals.map(p=>({href:'#/termek/'+p.i,src:img(p),alt:p.n,contain:true}))].slice(0,3);
   app.innerHTML=`
   <section class="hero"><div class="wrap hero-grid">
     <div class="fade-in">
@@ -258,9 +268,7 @@ function pageHome(){
       <div class="stats"><div><strong>${P.length.toLocaleString('hu-HU')}</strong><span>termék a kínálatban</span></div><div><strong>6</strong><span>áruház országszerte</span></div><div><strong>0% THM</strong><span>MilPay részletfizetés</span></div></div>
     </div>
     <div class="collage fade-in">
-      <a href="#/marka/CYBEX" class="tile t1"><img src="${promoImg(PROMOS[0][4])}" alt="CYBEX Gold" onerror="this.remove()"></a>
-      <a href="#/marka/HAPPY%20HORSE" class="tile" style="background:var(--sky)"><img src="${promoImg(PROMOS[3][4])}" alt="Happy Horse" onerror="this.remove()"></a>
-      <a href="#/marka/NATTOU" class="tile" style="background:var(--sage-l)"><img src="${promoImg(PROMOS[5][4])}" alt="Nattou" onerror="this.remove()"></a>
+      ${heroTiles.map((x,i)=>`<a href="${x.href}" class="tile ${i?'':'t1'}" style="background:${['var(--blush)','var(--sky)','var(--sage-l)'][i]}"><img src="${esc(x.src)}" alt="${esc(x.alt)}" ${x.contain?'style="object-fit:contain;background:#fff;padding:12px"':''} onerror="this.remove()"></a>`).join('')}
       <div class="ribbon">${P.filter(p=>p.d>0).length} akciós termék</div>
       <div class="float-card"><div class="fi">${icon('i-store')}</div><div><b>Rendeld online, vedd át ingyen</b><span>1–3 munkanapon belül, bármelyik áruházunkban</span></div></div>
     </div>
@@ -277,7 +285,7 @@ function pageHome(){
   </div></section>
   <section class="promos-sec"><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">Aktuális akciók</span><h2>Most éri meg igazán</h2><p>Válogatott márkák kedvezményes áron – a készlet erejéig.</p></div><a href="#/akciok" class="btn btn-primary">Összes akciós termék ${icon('i-arrow','sm')}</a></div>
-    <div class="promos">${PROMOS.filter(p=>daysLeft(p[3])>0).map(p=>{const dl=daysLeft(p[3]);return `<a href="#/marka/${encodeURIComponent(p[0])}" class="promo"><div class="pimg"><img src="${promoImg(p[4])}" alt="${esc(p[0])} akció" loading="lazy" onerror="this.remove()"><span class="brand">${esc(p[0])}</span></div><div class="pbody"><h3>${esc(p[1])}</h3><p>${esc(p[2])}</p><div class="valid"><span>Érvényes: <b>${p[3].replaceAll('-','.')}.</b>-ig</span><span class="countdown">Még ${dl} nap</span></div></div></a>`}).join('')}</div>
+    ${active.length?`<div class="promos">${active.map(p=>{return `<a href="#/marka/${encodeURIComponent(p[0])}" class="promo"><div class="pimg"><img src="${promoImg(p[4])}" alt="${esc(p[0])} akció" loading="lazy" onerror="this.remove()"><span class="brand">${esc(p[0])}</span></div><div class="pbody"><h3>${esc(p[1])}</h3><p>${esc(p[2])}</p><div class="valid"><span>Érvényes: <b>${p[3].replaceAll('-','.')}.</b>-ig</span><span class="countdown">${leftLabel(p[3])}</span></div></div></a>`}).join('')}</div>`:`<div class="products">${deals.slice(0,8).map(card).join('')}</div>`}
   </div></section>
   <section><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">Népszerű most</span><h2>Legnépszerűbb termékek</h2></div>${railNav('railPop')}</div>
@@ -480,7 +488,7 @@ function pageBrand(name,q){
   const disp=brandMap[k]?.name||name;
   document.title=disp+' – Kangaboo';
   const chips=[{label:'Összes',n:all.length,href:'#/marka/'+encodeURIComponent(name),on:!tf},...topChips(all,id=>`#/marka/${encodeURIComponent(name)}?k=${id}`).map(c=>({...c,on:c.href.endsWith('='+tf)}))];
-  const promo=PROMOS.find(p=>p[0]===k);
+  const promo=activePromos().find(p=>p[0]===k);
   listing({key:'brand'+k+tf,head:simpleHead(disp,promo?`<b>${esc(promo[1])}</b> – ${esc(promo[2])} Érvényes: ${promo[3].replaceAll('-','.')}.-ig.`:`${all.length} ${esc(disp)} termék a Kangaboo kínálatában.`,[['Márkák','#/markak'],[disp]],'Márka'),base,chips});
 }
 function pageSearch(q){
@@ -830,6 +838,10 @@ window.addEventListener('scroll',()=>$('#hdr').classList.toggle('scrolled',scrol
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ toggleDrawer(false); $('#filters')?.classList.remove('open'); } });
 
 buildNav(); buildSearch(); badge();
+if(KB.asof){
+  const db=document.querySelector('#demoBar span'); if(db) db.insertAdjacentHTML('afterend',`<span class="asof">${esc(asofText())}</span>`);
+  const fb=document.querySelector('.f-bottom > span'); if(fb) fb.insertAdjacentHTML('afterend',`<span>${esc(asofText())}</span>`);
+}
 lastPath=location.hash.split('?')[0];
 route();
 })();
