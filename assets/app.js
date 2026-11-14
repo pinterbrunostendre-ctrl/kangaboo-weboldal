@@ -63,8 +63,15 @@ const TOPMETA = {
   '660000':{i:'c-toy',bg:'var(--lilac)',fg:'var(--lilac-d)',d:'Bébijátékok, fajátékok, plüssök, társasjátékok, könyvek és ajándékok.'},
   '670000':{i:'c-seat',bg:'var(--sky)',fg:'var(--sky-d)',d:'Autósülések, hordozók, kerékpárülések és kiegészítők.'}
 };
+// kategóriaszínek: bg = telített lapka, fg = ikon a lapkán (kontraszt ≥ 3:1), tint = világos fejléc, deep = szöveg/ikon fehéren vagy a világos árnyalaton
+const PALETTE=[
+  {bg:'var(--brand-orange)',fg:'#fff',tint:'var(--orange-100)',deep:'var(--coral-text)'},
+  {bg:'var(--brand-pink)',fg:'#fff',tint:'var(--pink-100)',deep:'var(--pink-d)'},
+  {bg:'var(--brand-sun)',fg:'var(--ink)',tint:'var(--sun-100)',deep:'var(--butter-d)'},
+  {bg:'var(--brand-lime)',fg:'var(--ink)',tint:'var(--lime-100)',deep:'var(--sage-d)'},
+  {bg:'var(--brand-blue)',fg:'var(--ink)',tint:'var(--blue-100)',deep:'var(--sky-d)'}];
 const TOP = {}, SUB = {}, SUB2TOP = {};
-KB.tops.forEach(t=>{ TOP[t.id]=t; t.meta=TOPMETA[t.id]||{i:'c-gift',bg:'var(--sand)',fg:'var(--ink)',d:''}; t.subs.forEach(s=>{SUB[s.id]=s;SUB2TOP[s.id]=t.id;}); });
+KB.tops.forEach((t,ix)=>{ TOP[t.id]=t; t.meta={...(TOPMETA[t.id]||{i:'c-gift',d:''}),...PALETTE[ix%PALETTE.length]}; t.subs.forEach(s=>{SUB[s.id]=s;SUB2TOP[s.id]=t.id;}); });
 
 /* ---------- products (igény szerint betöltve) ---------- */
 // Két adatfajta:
@@ -164,7 +171,7 @@ function card(p){
   const ph = icon(TOP[p.t[0]]?.meta.i||'c-gift','ph-art');
   const isNew=p.w, sale=p.o&&p.o>p.p;
   return `<article class="prod">
-    <div class="pv" style="color:${TOP[p.t[0]]?.meta.fg||'var(--muted)'}">${ph}
+    <div class="pv" style="color:${TOP[p.t[0]]?.meta.deep||'var(--muted)'}">${ph}
       ${p.m?`<img src="${esc(img(p))}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">`:''}
       <div class="tags">${isNew?'<span class="tag new">Újdonság</span>':''}${sale?`<span class="tag sale">−${p.d}%</span>`:''}</div>
       <button class="fav ${favs.has(p.i)?'on':''}" data-fav="${p.i}" aria-label="Kedvencekhez" onclick="event.stopPropagation();toggleFav('${p.i}')">${icon('i-heart')}</button>
@@ -334,6 +341,7 @@ function storesHTML(){
 function adviceHTML(){
   return `<div class="advice">
     <div class="ad-l">
+      <span class="panel-badge" style="background:var(--brand-lime);color:var(--ink)" aria-hidden="true">${icon('i-chat')}</span>
       <span class="eyebrow" style="color:var(--sage-d)">Ingyenes szakmai tanácsadás</span>
       <h2>Nem tudod, mi kell a baba érkezése előtt?</h2>
       <p style="color:var(--ink-2)">Szakértő kollégánk visszahív, és egyeztetünk egy időpontot, amikor személyesen végigvesszük a teendőket.</p>
@@ -388,7 +396,7 @@ function pageHome(){
   </div></section>
   <section><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">Kategóriák</span><h2>Válogass igény szerint</h2></div><a href="#/kategoriak" class="link-arrow">Összes kategória ${icon('i-arrow','sm')}</a></div>
-    <div class="cats">${KB.tops.map(t=>`<a href="#/kategoria/${t.id}" class="cat"><div class="ci" style="background:${t.meta.bg};color:${t.meta.fg}">${icon(t.meta.i)}</div><div><h3>${esc(t.name)}</h3><p>${topCount(t.id)} termék · ${t.subs.length} alkategória</p></div><span class="go">Megnézem ${icon('i-arrow','xs')}</span></a>`).join('')}</div>
+    <div class="cats">${KB.tops.map(t=>`<a href="#/kategoria/${t.id}" class="cat" style="--cc:${t.meta.bg}"><div class="ci" style="background:${t.meta.bg};color:${t.meta.fg}">${icon(t.meta.i)}</div><div><h3>${esc(t.name)}</h3><p>${topCount(t.id)} termék · ${t.subs.length} alkategória</p></div><span class="go">Megnézem ${icon('i-arrow','xs')}</span></a>`).join('')}</div>
   </div></section>
   <section class="promos-sec"><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">Aktuális akciók</span><h2>Most éri meg igazán</h2><p>Válogatott márkák kedvezményes áron – a készlet erejéig.</p></div><a href="#/akciok" class="btn btn-primary">Összes akciós termék ${icon('i-arrow','sm')}</a></div>
@@ -425,6 +433,7 @@ function pageHome(){
 function loyaltyNews(){
   return `<div class="wrap duo">
     <div class="loyal">
+      <span class="panel-badge" style="background:var(--brand-pink);color:#fff" aria-hidden="true">${icon('i-card')}</span>
       <span class="eyebrow">Törzsvásárlói program</span>
       <h2>Vásárolj és gyűjts pontokat</h2>
       <div class="pts"><strong>2 pont</strong><span style="color:var(--on-dark)">minden elköltött 100 Ft után</span></div>
@@ -433,6 +442,7 @@ function loyaltyNews(){
       <div class="card-visual" aria-hidden="true"><b>Kangaboo</b><span>TÖRZSVÁSÁRLÓ</span></div>
     </div>
     <div class="news">
+      <span class="panel-badge" style="background:var(--brand-sun);color:var(--ink)" aria-hidden="true">${icon('i-mail')}</span>
       <span class="eyebrow" style="color:var(--butter-d)">Hírlevél</span>
       <h2>Heti akciók elsőként a postaládádba</h2>
       <p>Iratkozz fel, és értesülj elsőként az újdonságokról, kedvezményekről és szakértői tippjeinkről.</p>
@@ -585,9 +595,9 @@ function listing(opt){
 }
 function catHero(t,title,sub,n){
   return `<div class="wrap">${crumbs(sub?[[t.name,'#/kategoria/'+t.id],[title]]:[[t.name]])}
-    <div class="cat-hero" style="background:${t.meta.bg};color:${t.meta.fg}">
-      <div style="color:var(--ink)"><span class="eyebrow" style="color:${t.meta.fg}">${sub?esc(t.name):'Kategória'}</span><h1>${esc(title)}</h1><p>${esc(sub?`Válogass ${n} termék közül a(z) ${title.toLowerCase()} kategóriában.`:t.meta.d)}</p><span class="count">${n} termék</span></div>
-      ${icon(t.meta.i,'big-icon')}
+    <div class="cat-hero" style="background:${t.meta.tint};border-top:8px solid ${t.meta.bg}">
+      <div style="color:var(--ink)"><span class="eyebrow" style="color:${t.meta.deep}">${sub?esc(t.name):'Kategória'}</span><h1>${esc(title)}</h1><p>${esc(sub?`Válogass ${n} termék közül a(z) ${title.toLowerCase()} kategóriában.`:t.meta.d)}</p><span class="count">${n} termék</span></div>
+      <span class="hero-tile" style="background:${t.meta.bg};color:${t.meta.fg}" aria-hidden="true">${icon(t.meta.i)}</span>
     </div></div>`;
 }
 function pageCategory(tid,sid){
@@ -701,7 +711,7 @@ function pageProduct(id){
   <div class="pdp">
     <div class="gallery ${gal.length>1?'':'single'}">
       ${gal.length>1?`<div class="thumbs">${gal.map((g,i)=>`<button class="${i?'':'on'}" data-g="${i}" aria-label="${i+1}. kép"><img src="${esc(g)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></button>`).join('')}</div>`:''}
-      <div class="main" id="gmain" role="button" tabindex="0" aria-pressed="false" aria-label="Kép nagyítása" style="color:${t?.meta.fg||'var(--muted)'}">${ph}${gal[0]?`<img src="${esc(gal[0])}" alt="${esc(p.n)}" style="position:absolute;inset:0;background:#fff" onerror="imgFail(this)">`:''}
+      <div class="main" id="gmain" role="button" tabindex="0" aria-pressed="false" aria-label="Kép nagyítása" style="color:${t?.meta.deep||'var(--muted)'}">${ph}${gal[0]?`<img src="${esc(gal[0])}" alt="${esc(p.n)}" style="position:absolute;inset:0;background:#fff" onerror="imgFail(this)">`:''}
         <div class="tags">${p.w?'<span class="tag new">Újdonság</span>':''}${sale?`<span class="tag sale">−${p.d}%</span>`:''}</div></div>
     </div>
     <div class="pinfo">

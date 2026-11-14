@@ -3,6 +3,8 @@
   /* a logó telített színei */
   --brand-orange:#F05A28; --brand-pink:#DF3C73; --brand-sun:#F5B021; --brand-lime:#CDD330; --brand-blue:#34B2DD; --brand-purple:#4A244C;
   /* nagyon világos sávok a szakaszok elválasztásához */
+  --orange-100:#FFD9C9; --pink-100:#FAD3E1; --sun-100:#FFE7A8; --lime-100:#EEF3B4; --blue-100:#DDF2FA;
+  --stripe:linear-gradient(90deg,var(--brand-orange) 0 20%,var(--brand-pink) 20% 40%,var(--brand-sun) 40% 60%,var(--brand-lime) 60% 80%,var(--brand-blue) 80% 100%);
   --orange-50:#FFF3EE; --pink-50:#FDEFF4; --sun-50:#FFF7E3; --lime-50:#F8FADF; --blue-50:#EBF7FC; --sand:#F3ECF3; --sand-2:#E6D9E7;
   --ink:#4A244C; --ink-2:#5E4E70; --muted:#77697D; --line:#EAE2EB;
   --coral:#F05A28; --coral-d:#D14412; --coral-text:#B23A0F;
@@ -31,13 +33,13 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;letter-spacin
 .eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--coral-text)}
 .muted{color:var(--muted)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.45rem;border-radius:999px;font-weight:600;font-size:.94rem;border:1.5px solid transparent;cursor:pointer;transition:.2s ease;white-space:nowrap}
-.btn-primary{background:var(--ink);color:#fff}
-.btn-primary:hover{background:var(--ink-h)}
+.btn-primary{background:var(--coral-d);color:#fff}
+.btn-primary:hover{background:var(--coral-text)}
 .btn-coral{background:var(--coral-d);color:#fff}
 .btn-coral:hover{background:var(--coral-text)}
-.btn-ghost{border-color:var(--ink);color:var(--ink);background:transparent}
+.btn-ghost{border-color:var(--ink);color:var(--ink);background:#fff}
 .btn-ghost:hover{background:var(--ink);color:#fff}
-.btn-soft{background:var(--sand);color:var(--ink)}
+.btn-soft{background:var(--lilac);color:var(--ink)}
 .btn-soft:hover{background:var(--sand-2)}
 .btn-block{width:100%;white-space:normal;text-align:center}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
@@ -93,7 +95,14 @@ header.site.scrolled{border-color:var(--line);box-shadow:0 6px 24px rgba(74,36,7
 nav.main{border-top:1px solid var(--line)}
 nav.main ul{list-style:none;display:flex;gap:2px;align-items:center;height:52px}
 nav.main > .wrap > ul > li > a{display:flex;align-items:center;gap:.35rem;padding:.5rem .9rem;border-radius:999px;font-weight:600;font-size:.9rem;transition:.2s}
-nav.main > .wrap > ul > li > a:hover,nav.main > .wrap > ul > li > a.active{background:var(--sand)}
+nav.main > .wrap > ul > li > a{position:relative}
+nav.main > .wrap > ul > li > a::after{content:"";position:absolute;left:.9rem;right:.9rem;bottom:2px;height:3px;border-radius:2px;background:var(--uc,var(--brand-orange));transform:scaleX(0);transform-origin:left;transition:transform .2s}
+nav.main > .wrap > ul > li > a:hover::after,nav.main > .wrap > ul > li > a.active::after,nav.main > .wrap > ul > li > a:focus-visible::after{transform:scaleX(1)}
+nav.main > .wrap > ul > li:nth-child(5n+1) > a{--uc:var(--brand-orange)}
+nav.main > .wrap > ul > li:nth-child(5n+2) > a{--uc:var(--brand-pink)}
+nav.main > .wrap > ul > li:nth-child(5n+3) > a{--uc:var(--brand-sun)}
+nav.main > .wrap > ul > li:nth-child(5n+4) > a{--uc:var(--brand-lime)}
+nav.main > .wrap > ul > li:nth-child(5n) > a{--uc:var(--brand-blue)}
 nav.main .sale{color:var(--coral-text)}
 nav.main .spacer{flex:1}
 .mega{position:absolute;top:100%;left:0;right:0;background:var(--surface);box-shadow:0 30px 60px rgba(74,36,76,.14);border-top:1px solid var(--line);opacity:0;visibility:hidden;transition:.18s;z-index:55}
@@ -205,7 +214,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .tags{position:absolute;left:12px;top:12px;display:flex;gap:5px;flex-direction:column;align-items:flex-start;z-index:2}
 .tag{font-size:.68rem;font-weight:700;padding:4px 9px;border-radius:999px;letter-spacing:.03em}
 .tag.new{background:var(--ink);color:#fff}
-.tag.sale{background:var(--coral-d);color:#fff}
+.tag.sale{background:var(--pink-d);color:#fff}
 .fav{position:absolute;right:10px;top:10px;width:36px;height:36px;border-radius:50%;background:#fff;border:0;display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);transition:.2s;z-index:2}
 .fav .icon{width:17px;height:17px}
 .fav:hover{transform:scale(1.08)}
@@ -252,7 +261,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .float-card .fi{width:44px;height:44px;border-radius:12px;background:var(--sage-l);color:var(--sage-d);display:grid;place-items:center;flex-shrink:0}
 .float-card b{display:block;font-size:.9rem}
 .float-card span{font-size:.79rem;color:var(--muted)}
-.ribbon{position:absolute;top:22px;right:-14px;background:var(--coral-d);color:#fff;font-weight:700;font-size:.82rem;padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);transform:rotate(3deg)}
+.ribbon{position:absolute;top:22px;right:-14px;background:var(--pink-d);color:#fff;font-weight:700;font-size:.82rem;padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);transform:rotate(3deg)}
 .usp{background:var(--surface);border-block:1px solid var(--line);padding:0}
 .usp .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
 .usp-item{display:flex;gap:14px;align-items:center;padding:24px 20px}
@@ -638,3 +647,21 @@ footer .wordmark em{color:var(--coral)}
 .band-pink{background:var(--pink-50);border-block:1px solid #F7D5E1}
 .band-blue{background:var(--blue-50);border-block:1px solid #CFEAF5}
 .sec-line{border-top:1px solid var(--line)}
+
+/* A2: ötszínű csík a navigáció alján és a lábléc végén */
+header.site::after{content:"";display:block;height:5px;background:var(--stripe)}
+footer::after{content:"";display:block;height:5px;background:var(--stripe)}
+/* kategórialapok: felül a kategória telített színe */
+.cat{border-top:4px solid var(--cc,var(--line))}
+/* kategóriaoldal fejléce: világos árnyalat + telített ikonlapka */
+.cat-hero .hero-tile{width:120px;height:120px;border-radius:32px;display:grid;place-items:center;flex-shrink:0}
+.cat-hero .hero-tile .icon{width:64px;height:64px;stroke-width:1.5}
+@media (max-width:640px){.cat-hero .hero-tile{width:72px;height:72px;border-radius:20px}.cat-hero .hero-tile .icon{width:38px;height:38px}}
+/* nagy panelek: a márkaszín jól látható világos árnyalata + telített sáv és ikonjelvény */
+.advice{background:var(--lime-100);border-top:8px solid var(--brand-lime)}
+.advice .ad-l p,.advice li{color:var(--ink-2)}
+.news{background:var(--sun-100);border-top:8px solid var(--brand-sun)}
+.news p{color:var(--ink-2)}
+.loyal{border-top:8px solid var(--brand-pink)}
+.panel-badge{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;margin-bottom:14px}
+.panel-badge .icon{width:26px;height:26px}
