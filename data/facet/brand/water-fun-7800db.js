@@ -1,0 +1,1 @@
+KB_FACET("brand-water-fun-7800db",{"b":["WATER FUN"],"s":[],"r":[["1056226",12419,0,2990,0,0,[],[62]]],"cards":[{"i":"1056226","u":"felhuzhato-uszo-allatok-6-fele-10694c","n":"Felhúzható úszó állatok - 6 féle","b":"WATER FUN","m":"p-W/xWATER-FUN-Felhuzhato-uszo-allatok---6-fele-10694C-0-600x600.JPG.pagespeed.ic.y3SUXIHU9x.jpg","p":2990,"c":["666800"],"k":12419}]});

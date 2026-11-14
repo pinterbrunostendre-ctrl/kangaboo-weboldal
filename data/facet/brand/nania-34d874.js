@@ -1,0 +1,1 @@
+KB_FACET("brand-nania-34d874",{"b":["NANIA"],"s":[],"r":[["1321436",7202,0,27990,0,1,[],[33]]],"cards":[{"i":"1321436","u":"bianca-etetoszek-1468e0","n":"Bianca etetőszék","b":"NANIA","m":"p-N/NANIA-Bianca-etetoszek-1468E0-1009881-600x600.JPG","p":27990,"c":["545500"],"w":1,"k":7202}]});

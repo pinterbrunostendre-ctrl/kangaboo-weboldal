@@ -1,0 +1,1 @@
+KB_FACET("brand-kneeguardkids-f3511d",{"b":["KneeGuardKids"],"s":[],"r":[["1285646",12865,0,33990,0,0,[],[23]]],"cards":[{"i":"1285646","u":"4-univerzalis-labtarto-autosulesekhez-13dd44?page=2","n":"4 Univerzális lábtartó autósülésekhez","b":"KneeGuardKids","m":"p-K/KneeGuardKids-4-Univerzalis-labtarto-autosulesekhez-13DD44-0-600x600.JPG","p":33990,"c":["675000"],"k":12865}]});

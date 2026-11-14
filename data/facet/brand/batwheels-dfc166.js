@@ -1,0 +1,1 @@
+KB_FACET("brand-batwheels-dfc166",{"b":["BATWHEELS"],"s":[],"r":[["1291176",11061,0,3490,0,1,[],[54]]],"cards":[{"i":"1291176","u":"felhuzhato-auto-tobbfele-13f2d7?page=7","n":"felhúzható autó - többféle","b":"BATWHEELS","m":"p-B/xBATWHEELS-felhuzhato-auto---tobbfele-13F2D7-0-600x600.JPG.pagespeed.ic.FacbDA7zc2.jpg","p":3490,"c":["665200"],"w":1,"k":11061}]});

@@ -1,0 +1,1 @@
+KB_FACET("brand-trisa-86fdc5",{"b":["TRISA"],"s":[],"r":[["1101243",6627,0,250,899,0,[],[40]]],"cards":[{"i":"1101243","u":"young-gyermek-fogkefe-6--110fcb?page=3","n":"Young gyermek fogkefe 6+","b":"TRISA","m":"p-T/xTRISA-Young-gyermek-fogkefe-6-110FCB-0-600x600.JPG.pagespeed.ic.tJsgaMIpVU.jpg","p":250,"c":["525300"],"o":899,"k":6627}]});

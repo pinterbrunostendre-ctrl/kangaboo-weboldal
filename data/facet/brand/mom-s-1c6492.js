@@ -1,0 +1,1 @@
+KB_FACET("brand-mom-s-1c6492",{"b":["MOM'S"],"s":[],"r":[["1091601",12457,0,1390,2790,0,[],[62]]],"cards":[{"i":"1091601","u":"furdoszobai-tarolo-csikohal-10ecc9?page=2","n":"fürdőszobai tároló - csikóhal","b":"MOM'S","m":"p-M/xMOMS-furdoszobai-tarolo---csikohal-10ECC9-0-600x600.JPG.pagespeed.ic.FSt1CdlSto.jpg","p":1390,"c":["666800"],"o":2790,"k":12457}]});

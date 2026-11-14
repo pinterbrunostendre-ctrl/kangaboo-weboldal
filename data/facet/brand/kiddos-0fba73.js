@@ -1,0 +1,1 @@
+KB_FACET("brand-kiddos-0fba73",{"b":["KIDDOS"],"s":[],"r":[["1106234",7576,0,599,1450,0,[],[34]]],"cards":[{"i":"1106234","u":"villa-112328?page=10&selected_color=1034285","n":"villa","b":"KIDDOS","m":"p-K/KIDDOS-villa-112328-1034285-600x600.JPG","p":599,"c":["545600"],"o":1450,"f":1,"k":7576}]});

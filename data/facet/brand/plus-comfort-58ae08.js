@@ -1,0 +1,1 @@
+KB_FACET("brand-plus-comfort-58ae08",{"b":["PLUS COMFORT"],"s":[],"r":[["1256930",6373,0,13990,0,0,[],[37]]],"cards":[{"i":"1256930","u":"elektromos-orrszivo-136d30?page=4","n":"elektromos orrszívó","b":"PLUS COMFORT","m":"p-P/xPLUS-COMFORT-elektromos-orrszivo-136D30-0-600x600.JPG.pagespeed.ic.dI-nr8WaLf.jpg","p":13990,"c":["525000"],"k":6373}]});

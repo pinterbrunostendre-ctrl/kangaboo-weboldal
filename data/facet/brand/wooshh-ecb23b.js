@@ -1,0 +1,1 @@
+KB_FACET("brand-wooshh-ecb23b",{"b":["WOOSHH"],"s":[],"r":[["1318300",9101,0,9990,0,1,[],[51]]],"cards":[{"i":"1318300","u":"wooshh-altatodal-lejatszo-145ca8?page=4","n":"Wooshh altatódal-lejátszó","b":"WOOSHH","m":"p-W/xWOOSHH-Wooshh-altatodal-lejatszo-145CA8-0-600x600.JPG.pagespeed.ic.STBaHC5vdK.jpg","p":9990,"c":["664900"],"w":1,"k":9101}]});

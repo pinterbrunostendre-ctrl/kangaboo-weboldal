@@ -1,0 +1,1 @@
+KB_FACET("brand-schiffer-db7228",{"b":["SCHIFFER"],"s":[],"r":[["1271399",6323,0,699,0,0,[],[37]]],"cards":[{"i":"1271399","u":"digitalis-homero-13a5b2?page=3","n":"Digitális hőmérő","b":"SCHIFFER","m":"p-S/SCHIFFER-Digitalis-homero-13A5B2-0-600x600.JPG","p":699,"c":["525000"],"k":6323}]});

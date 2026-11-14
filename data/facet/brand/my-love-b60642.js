@@ -1,0 +1,1 @@
+KB_FACET("brand-my-love-b60642",{"b":["MY LOVE"],"s":["38 cm"],"r":[["1310104",10598,0,6990,0,1,[0],[53]]],"cards":[{"i":"1310104","u":"flower-dolly-baba-3-fele-143ca8?page=3","n":"Flower Dolly baba - 3-féle","b":"MY LOVE","m":"p-M/xMY-LOVE-Flower-Dolly-baba---3-fele-143CA8-0-600x600.JPG.pagespeed.ic.x5PQYKIYIa.jpg","p":6990,"c":["665100"],"w":1,"s":["38 cm"],"k":10598}]});

@@ -1,0 +1,1 @@
+KB_FACET("brand-rockit-dd242a",{"b":["ROCKIT"],"s":[],"r":[["1318298",8544,0,17990,0,1,[],[27]]],"cards":[{"i":"1318298","u":"rocker-mk2-ujratoltheto-babakocsi-ringato-145ca6","n":"Rocker MK2 újratölthető babakocsi-ringató","b":"ROCKIT","m":"p-R/ROCKIT-Rocker-MK2-ujratoltheto-babakocsi-ringato-145CA6-0-600x600.JPG","p":17990,"c":["565000"],"w":1,"k":8544}]});

@@ -1,0 +1,1 @@
+KB_FACET("brand-snuza-51bb27",{"b":["SNUZA"],"s":[],"r":[["1101082",8684,0,38890,0,0,[],[41]]],"cards":[{"i":"1101082","u":"hero-md-mobil-legzesfigyelo-110f2a","n":"Hero MD mobil légzésfigyelő","b":"SNUZA","m":"p-S/xSNUZA-Hero-MD-mobil-legzesfigyelo-110F2A-0-600x600.JPG.pagespeed.ic.Gd4m0eitX1.jpg","p":38890,"c":["574900"],"k":8684}]});

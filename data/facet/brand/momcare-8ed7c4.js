@@ -1,0 +1,1 @@
+KB_FACET("brand-momcare-8ed7c4",{"b":["MOMCARE"],"s":[],"r":[["1073492",241,0,2790,0,0,[],[7]]],"cards":[{"i":"1073492","u":"jegbetet-10a765","n":"Jégbetét","b":"MOMCARE","m":"p-M/xMOMCARE-Jegbetet-10A765-0-600x600.JPG.pagespeed.ic.r7DAHYA2v3.jpg","p":2790,"c":["495600"],"k":241}]});

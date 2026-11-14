@@ -1,0 +1,1 @@
+KB_FACET("brand-foppapedretti-b8c899",{"b":["FOPPAPEDRETTI"],"s":[],"r":[["1077161",6492,0,999,6490,0,[],[39]]],"cards":[{"i":"1077161","u":"potty-chair-bili-10b4ee","n":"Potty-Chair bili","b":"FOPPAPEDRETTI","m":"p-F/xFOPPAPEDRETTI-Potty-Chair-bili-10B4EE-1031331-600x600.JPG.pagespeed.ic.C8jdFWBj4J.jpg","p":999,"c":["525200"],"o":6490,"k":6492}]});

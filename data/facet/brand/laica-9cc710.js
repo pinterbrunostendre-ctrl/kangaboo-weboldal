@@ -1,0 +1,1 @@
+KB_FACET("brand-laica-9cc710",{"b":["LAICA"],"s":[],"r":[["1201319",6403,0,12590,15990,0,[],[37]]],"cards":[{"i":"1201319","u":"infravoros-erintesmentes-3-az-1-ben-lazmero-1294d3?page=5","n":"infravörös érintésmentes 3 az 1-ben lázmérő","b":"LAICA","m":"p-L/LAICA-infravoros-erintesmentes-3-az-1-ben-lazmero-1294D3-0-600x600.JPG","p":12590,"c":["525000"],"o":15990,"k":6403}]});

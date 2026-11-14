@@ -1,0 +1,1 @@
+KB_FACET("brand-romer-79221d",{"b":["RÖMER"],"s":[],"r":[["1000085",8619,0,999,2990,0,[],[27]]],"cards":[{"i":"1000085","u":"adapter-baby-safe-hordozohoz-c94f5?page=3","n":"Adapter Baby Safe hordozóhoz","b":"RÖMER","m":"p-R/xROMER-Adapter-Baby-Safe-hordozohoz-C94F5-0-600x600.JPG.pagespeed.ic.urJBaWizfp.jpg","p":999,"c":["565000"],"o":2990,"k":8619}]});

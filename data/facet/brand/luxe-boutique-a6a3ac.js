@@ -1,0 +1,1 @@
+KB_FACET("brand-luxe-boutique-a6a3ac",{"b":["LUXE BOUTIQUE"],"s":[],"r":[["1137129",11918,0,599,2120,0,[],[59]]],"cards":[{"i":"1137129","u":"fiona-hattyu-taskadisz-119bc8?page=5","n":"Fiona hattyú táskadísz","b":"LUXE BOUTIQUE","m":"p-L/xLUXE-BOUTIQUE-Fiona-hattyu-taskadisz-119BC8-0-600x600.JPG.pagespeed.ic.v080Nj6fmo.jpg","p":599,"c":["666500"],"o":2120,"k":11918}]});

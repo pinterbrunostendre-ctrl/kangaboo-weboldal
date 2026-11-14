@@ -28,9 +28,12 @@ index.html            oldalváz, fejléc, lábléc, ikonok
 assets/style.css      teljes dizájn (reszponzív, 3 töréspont)
 assets/app.js         útválasztás, oldalak, szűrés, kosár, pénztár
 data/home.js          a főoldalhoz szükséges kis fájl: kategóriák, darabszámok, kiemelt termékek, adatdátum
-data/cat/<id>.js      főkategóriánkénti termékkatalógus, csak az adott kategória megnyitásakor töltődik be
-data/search.js        keresőindex, az első kereséskor töltődik be
-data/idmap.js         melyik termék melyik kategóriafájlban van (termékoldal, kosár, kedvencek)
+data/facet/*.js       tömör szűrőadat (márka, ár, méret, kategória, sorrend) főkategóriánként, alkategóriánként,
+                      az Akciókhoz, az Újdonságokhoz és márkánként; benne az első 24 termék kártyája
+data/cards/<n>.js     a termékek teljes adata (név, kép, ár, méretek), azonosító szerint 512 kis fájlban;
+                      csak a ténylegesen megjelenített termékekhez töltődik be
+data/brands.js        márkanevek és darabszámok, márkánként az első 13 termék
+data/search.js        keresőindex a szűréshez szükséges adatokkal, az első kereséskor töltődik be
 data/details/*.js     termékleírások + galériák, 128 darabban, igény szerint töltődnek
 scripts/              adatgyűjtő és összeállító szkriptek
 ```
@@ -43,7 +46,8 @@ A nyers adatok egy `raw/` munkamappába kerülnek, amely nem része a bemutatón
 mkdir -p raw && curl -sL -A "Mozilla/5.0" -o raw/home.html https://kangaboo.hu/
 python3 -I scripts/tree.py raw/home.html raw/cats.json
 python3 -I scripts/scrape.py raw      # terméklisták (friss árakhoz előtte töröld a raw/pages mappát)
-python3 -I scripts/details.py raw     # leírások, galériák (csak a még hiányzókat tölti le)
+python3 -I scripts/priority.py raw    # fontossági lista: amit a látogató először lát
+python3 -I scripts/details.py raw     # leírások, galériák a lista szerint; 1,5 s szünet, blokkolásnál megáll
 python3 -I scripts/build.py raw data  # data/ újragenerálása
 ```
 

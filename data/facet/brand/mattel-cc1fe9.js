@@ -1,0 +1,1 @@
+KB_FACET("brand-mattel-cc1fe9",{"b":["MATTEL"],"s":[],"r":[["1103764",11269,0,4590,0,0,[],[54]]],"cards":[{"i":"1103764","u":"verdak-3-karakter-kisautok-111987?page=14","n":"Verdák 3 karakter kisautók","b":"MATTEL","m":"p-M/MATTEL-Verdak-3-karakter-kisautok-111987-0-600x600.JPG","p":4590,"c":["665200"],"k":11269}]});

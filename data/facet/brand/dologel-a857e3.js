@@ -1,0 +1,1 @@
+KB_FACET("brand-dologel-a857e3",{"b":["DOLOGEL"],"s":["25ml"],"r":[["1171972",6606,0,3399,0,0,[0],[40]]],"cards":[{"i":"1171972","u":"foginy-gel-25-ml-12225e?page=2","n":"fogínygél 25 ml","b":"DOLOGEL","m":"p-D/xDOLOGEL-foginygel-25-ml-12225E-0-600x600.JPG.pagespeed.ic.222oJhRvS2.jpg","p":3399,"c":["525300"],"s":["25ml"],"k":6606}]});

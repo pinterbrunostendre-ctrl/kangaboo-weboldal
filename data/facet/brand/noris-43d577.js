@@ -1,0 +1,1 @@
+KB_FACET("brand-noris-43d577",{"b":["NORIS"],"s":[],"r":[["1169653",11442,0,4590,0,0,[],[55]]],"cards":[{"i":"1169653","u":"jatekgyujtemeny-100-db-jatekkal-121962?page=3","n":"Játékgyűjtemény 100 db játékkal","b":"NORIS","m":"p-N/xNORIS-Jatekgyujtemeny-100-db-jatekkal-121962-0-600x600.JPG.pagespeed.ic.guf55mPisz.jpg","p":4590,"c":["665300"],"k":11442}]});

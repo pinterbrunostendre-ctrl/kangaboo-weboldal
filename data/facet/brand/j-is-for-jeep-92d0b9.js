@@ -1,0 +1,1 @@
+KB_FACET("brand-j-is-for-jeep-92d0b9",{"b":["J IS FOR JEEP"],"s":[],"r":[["1141969",7256,0,5390,8390,0,[],[33]]],"cards":[{"i":"1141969","u":"autos-kiegeszito-szett-11aea0?page=3","n":"Autós kiegészítő szett","b":"J IS FOR JEEP","m":"p-J/xJ-IS-FOR-JEEP-Autos-kiegeszito-szett-11AEA0-0-600x600.JPG.pagespeed.ic.L-ruLP6abS.jpg","p":5390,"c":["545500"],"o":8390,"k":7256}]});

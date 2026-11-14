@@ -1,0 +1,1 @@
+KB_FACET("brand-jana-f5edb2",{"b":["JANA"],"s":[],"r":[["1008977",7688,0,319,0,0,[],[35]]],"cards":[{"i":"1008977","u":"baby-termeszetes-asvanyviz-1l-f3282?page=3","n":"Baby természetes ásványvíz 1l","b":"JANA","m":"p-J/xJANA-Baby-termeszetes-asvanyviz-1l-F3282-0-600x600.JPG.pagespeed.ic.EdrExB_2vH.jpg","p":319,"c":["545700"],"k":7688}]});

@@ -1,0 +1,1 @@
+KB_FACET("brand-clemmy-cc955e",{"b":["CLEMMY"],"s":[],"r":[["1061273",10282,0,2990,4490,0,[],[51]]],"cards":[{"i":"1061273","u":"vidam-allatkak-torony-107bee?page=39","n":"Vidám Állatkák Torony","b":"CLEMMY","m":"p-C/xCLEMMY-Vidam-Allatkak-Torony-107BEE-0-600x600.JPG.pagespeed.ic.Fwny_k50w0.jpg","p":2990,"c":["664900"],"o":4490,"k":10282}]});

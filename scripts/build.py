@@ -57,18 +57,58 @@ home={'detailCount':len(det),'tops':tops,'asof':ASOF,'total':len(P),'saleCount':
       'topBrands':sorted(brands.values(),key=lambda b:-b['n'])[:10],'topN':topN,'subN':subN,
       'popular':[pub(p) for p in popular],'deals':[pub(p) for p in deals],'news':[pub(p) for p in news],'mega':mega}
 sz={'home.js':W('home.js','window.KB_HOME='+J(home)+';')}
+import shutil,hashlib,unicodedata
+for d_ in ('cat','cards','facet'): shutil.rmtree(os.path.join(OUT,d_),ignore_errors=True)
+if os.path.exists(os.path.join(OUT,'idmap.js')): os.remove(os.path.join(OUT,'idmap.js'))
+SUBS=[s['id'] for t in tops for s in t['subs']]; SUBIDX={x:i for i,x in enumerate(SUBS)}
+# --- kártyák: a teljes termékrekord, azonosító szerint 512 kis fájlba osztva ---
+NCARD=512; cards={}
+for p in P: cards.setdefault(int(p['i'])%NCARD,[]).append(pub(p))
+for n in range(NCARD): W(f'cards/{n}.js',f'KB_CARDS({n},'+J(cards.get(n,[]))+');')
+sz['cards/ (512 fájl, átlag)']=sum(os.path.getsize(os.path.join(OUT,'cards',f'{n}.js')) for n in range(NCARD))//NCARD
+# --- tömör szűrőadat: [id, sorrend, márka-index, ár, régi ár, újdonság, méret-indexek, alkategória-indexek]
+#     + az alapértelmezett nézet első 24 termékének teljes kártyája
+def facet(key,ps,first):
+    bl,sl={},{}
+    rows=[[p['i'],p['k'],bl.setdefault(p['b'],len(bl)),p['p'],p.get('o',0),1 if p.get('w') else 0,
+           [sl.setdefault(x,len(sl)) for x in p.get('s',[])],[SUBIDX[c] for c in p['c'] if c in SUBIDX]] for p in ps]
+    return f'KB_FACET({J(key)},'+J({'b':list(bl),'s':list(sl),'r':rows,'cards':[pub(p) for p in first]})+');'
+disc_sort=lambda ps:sorted(ps,key=lambda p:(-p['_d'],p['k']))
 for t in tops:
-    sz['cat/'+t['id']+'.js']=W('cat/'+t['id']+'.js',f"KB_CAT('{t['id']}',"+J([pub(p) for p in P if t['id'] in p['_t']])+');')
-# keresőindex: [id, név, márka, ár, főkategória-indexek]
-sz['search.js']=W('search.js','KB_SEARCH('+J([[p['i'],p['n'],p['b'],p['p'],''.join(str(TOPIDX[x]) for x in p['_t'])] for p in P])+');')
-# termék -> főkategória(k), és márkánként az első 13 termék (a "márka további termékei" sávhoz)
+    ps=[p for p in P if t['id'] in p['_t']]
+    sz[f'facet/top-{t["id"]}.js']=W(f'facet/top-{t["id"]}.js',facet('top-'+t['id'],ps,ps[:24]))
+    for sb in t['subs']:
+        q=[p for p in P if sb['id'] in p['c']]
+        sz[f'facet/sub-{sb["id"]}.js']=W(f'facet/sub-{sb["id"]}.js',facet('sub-'+sb['id'],q,q[:24]))
+sale=[p for p in P if p['_d']>0]; new=[p for p in P if p.get('w')]
+sz['facet/sale.js']=W('facet/sale.js',facet('sale',sale,disc_sort(sale)[:24]))
+sz['facet/new.js']=W('facet/new.js',facet('new',new,new[:24]))
+# --- márkák: név + darabszám (+ fájlnév), márkánként külön szűrőfájl ---
+def bslug(k):
+    a=unicodedata.normalize('NFKD',k.lower()).encode('ascii','ignore').decode()
+    return (re.sub(r'[^a-z0-9]+','-',a).strip('-') or 'm')+'-'+hashlib.md5(k.encode()).hexdigest()[:6]
+blist=[]
+for k,e in brands.items():
+    q=[p for p in P if (p['b'] or '').upper()==k]; f=bslug(k)
+    sz[f'facet/brand/{f}.js']=W(f'facet/brand/{f}.js',facet('brand-'+f,q,q[:24]))
+    blist.append([e['name'],e['n'],f])
+# márkánként az első 13 termék (pontos márkanév szerint) a termékoldal "A márka további termékei" sávjához
 first={}
 for p in P:
     if p['b']:
         l=first.setdefault(p['b'],[])
         if len(l)<13: l.append(p['i'])
-sz['idmap.js']=W('idmap.js','KB_IDMAP('+J({'t':{p['i']:''.join(str(TOPIDX[x]) for x in p['_t']) for p in P},'b':first})+');')
-print(len(P),'products'); [print(f'  {k}: {v//1024} KB') for k,v in sz.items()]
+sz['brands.js']=W('brands.js','KB_BRANDS('+J({'list':blist,'first':first})+');')
+# --- keresőindex: név + a szűréshez szükséges adatok ---
+bl,sl={},{}
+srows=[[p['i'],p['n'],bl.setdefault(p['b'],len(bl)),p['p'],p.get('o',0),1 if p.get('w') else 0,
+        [sl.setdefault(x,len(sl)) for x in p.get('s',[])],[SUBIDX[c] for c in p['c'] if c in SUBIDX],p['k']] for p in P]
+sz['search.js']=W('search.js','KB_SEARCH('+J({'b':list(bl),'s':list(sl),'r':srows})+');')
+print(len(P),'products')
+big=sorted(sz.items(),key=lambda x:-x[1])
+for k,v in [x for x in sz.items() if not x[0].startswith('facet/sub-') and not x[0].startswith('facet/brand/')]: print(f'  {k}: {v/1024:.0f} KB')
+print('  legnagyobb alkategória-fájl:',max(((k,v) for k,v in sz.items() if k.startswith('facet/sub-')),key=lambda x:x[1]))
+print('  legnagyobb márkafájl:',max(((k,v) for k,v in sz.items() if k.startswith('facet/brand/')),key=lambda x:x[1]))
 print('with sizes',sum(1 for p in P if p.get('s')),'new',sum(1 for p in P if p.get('w')),'sale',sum(1 for p in P if p.get('o')),'noimg',sum(1 for p in P if not p['m']))
 
 for v in det.values():

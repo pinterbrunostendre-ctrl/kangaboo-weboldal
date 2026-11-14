@@ -1,0 +1,1 @@
+KB_FACET("brand-doomoo-07e27e",{"b":["DOOMOO"],"s":[],"r":[["1239736",8179,0,7590,0,0,[],[50]]],"cards":[{"i":"1239736","u":"easy-dream-hasmelegito-ov-kolika-ellen-132a22?page=2","n":"Easy Dream hasmelegítő öv kólika ellen","b":"DOOMOO","m":"p-D/DOOMOO-Easy-Dream-hasmelegito-ov-kolika-ellen-132A22-1010117-600x600.JPG","p":7590,"c":["556900"],"k":8179}]});

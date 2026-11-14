@@ -1,0 +1,1 @@
+KB_FACET("brand-my-carry-potty-314ab6",{"b":["MY CARRY POTTY"],"s":[],"r":[["1318296",6485,0,11990,0,1,[],[39]]],"cards":[{"i":"1318296","u":"utazobili-145ca4&selected_color=1037751","n":"Utazóbili","b":"MY CARRY POTTY","m":"p-M/xMY-CARRY-POTTY-Utazobili-145CA4-1037751-600x600.JPG.pagespeed.ic.QZnCAl6tKa.jpg","p":11990,"c":["525200"],"w":1,"k":6485}]});

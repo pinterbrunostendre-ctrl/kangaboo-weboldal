@@ -1,0 +1,1 @@
+KB_FACET("brand-patapum-c633d3",{"b":["PATAPUM"],"s":[],"r":[["1030638",12924,0,18990,22990,0,[],[25]]],"cards":[{"i":"1030638","u":"hordozo-babaknak-f2747&selected_color=1009878","n":"hordozó babáknak","b":"PATAPUM","m":"p-P/xPATAPUM-hordozo-babaknak-F2747-1009878-600x600.JPG.pagespeed.ic.iG9D4QvJ4v.jpg","p":18990,"c":["675200"],"o":22990,"f":1,"k":12924}]});

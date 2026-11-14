@@ -1,0 +1,1 @@
+KB_FACET("brand-chipolino-4f432f",{"b":["CHIPOLINO"],"s":[],"r":[["1223508",7240,0,24990,26990,0,[],[33]]],"cards":[{"i":"1223508","u":"sweety-multifunkcios-etetoszek-orchid-12ead5?page=2","n":"Sweety multifunkciós etetőszék Orchid","b":"CHIPOLINO","m":"p-C/CHIPOLINO-Sweety-multifunkcios-etetoszek-Orchid-12EAD5-1054771-600x600.JPG","p":24990,"c":["545500"],"o":26990,"k":7240}]});

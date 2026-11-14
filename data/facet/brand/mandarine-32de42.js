@@ -1,0 +1,1 @@
+KB_FACET("brand-mandarine-32de42",{"b":["MANDARINE"],"s":[],"r":[["1041264",11443,0,1990,6850,0,[],[55]]],"cards":[{"i":"1041264","u":"3d-puzzle-szinhaz-farm-1040af?page=4","n":"3D puzzle színház - Farm","b":"MANDARINE","m":"p-M/xMANDARINE-3D-puzzle-szinhaz---Farm-1040AF-0-600x600.JPG.pagespeed.ic.qL4RVaDBz3.jpg","p":1990,"c":["665300"],"o":6850,"k":11443}]});

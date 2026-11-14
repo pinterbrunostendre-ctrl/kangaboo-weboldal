@@ -1,0 +1,1 @@
+KB_FACET("brand-big-a60c6c",{"b":["BIG"],"s":["21-27"],"r":[["1088691",6139,0,2590,0,0,[0],[21]]],"cards":[{"i":"1088691","u":"big-cipovedo-meret:-21-27-10e170?page=2&selected_color=1009895","n":"Cipővédő - méret: 21-27","b":"BIG","m":"p-B/xBIG-Cipovedo---meret-21-27-10E170-1009895-600x600.JPG.pagespeed.ic.ZJFShbRHlE.jpg","p":2590,"c":["515300"],"f":1,"s":["21-27"],"k":6139}]});

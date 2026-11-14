@@ -1,0 +1,1 @@
+KB_FACET("brand-janod-af388b",{"b":["JANOD"],"s":[],"r":[["1003328",11448,0,1990,3610,0,[],[55]]],"cards":[{"i":"1003328","u":"allatos-piramis-f6bfa?page=4","n":"Állatos piramis","b":"JANOD","m":"p-J/xJANOD-Allatos-piramis-F6BFA-0-600x600.JPG.pagespeed.ic.T--E8r95TW.jpg","p":1990,"c":["665300"],"o":3610,"k":11448}]});

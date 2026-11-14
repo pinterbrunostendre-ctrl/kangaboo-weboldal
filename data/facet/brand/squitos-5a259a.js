@@ -1,0 +1,1 @@
+KB_FACET("brand-squitos-5a259a",{"b":["SQUITOS"],"s":[],"r":[["1268837",8906,0,4190,0,0,[],[42]]],"cards":[{"i":"1268837","u":"illatositott-matrica-24-db-139bb1?page=6","n":"illatosított matrica - 24 db","b":"SQUITOS","m":"p-S/xSQUITOS-illatositott-matrica---24-db-139BB1-0-600x600.JPG.pagespeed.ic.U3v_4YoPaa.jpg","p":4190,"c":["575000"],"k":8906}]});

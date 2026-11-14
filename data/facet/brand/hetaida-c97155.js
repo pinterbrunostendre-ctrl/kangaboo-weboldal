@@ -1,0 +1,1 @@
+KB_FACET("brand-hetaida-c97155",{"b":["HETAIDA"],"s":[],"r":[["1196320",6413,0,5990,24490,0,[],[37]]],"cards":[{"i":"1196320","u":"erintesmentes-infravoros-homero-12814d?page=5","n":"Érintésmentes infravörös hőmérő","b":"HETAIDA","m":"p-H/xHETAIDA-Erintesmentes-infravoros-homero-12814D-0-600x600.JPG.pagespeed.ic.MiOsOQDX1w.jpg","p":5990,"c":["525000"],"o":24490,"k":6413}]});

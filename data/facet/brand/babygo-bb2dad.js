@@ -1,0 +1,1 @@
+KB_FACET("brand-babygo-bb2dad",{"b":["BABYGO"],"s":[],"r":[["1177545",12923,0,10990,0,0,[],[25]]],"cards":[{"i":"1177545","u":"cangoo-kenguru-123804&selected_color=1010064","n":"Cangoo kenguru","b":"BABYGO","m":"p-B/xBABYGO-Cangoo-kenguru-123804-1010064-600x600.JPG.pagespeed.ic.np5GM9-lKk.jpg","p":10990,"c":["675200"],"f":1,"k":12923}]});
