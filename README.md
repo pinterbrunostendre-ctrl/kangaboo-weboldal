@@ -1,0 +1,49 @@
+# Kangaboo – újratervezett webshop felület
+
+Statikus, build-lépés nélküli webshop frontend: a kangaboo.hu teljes termékkínálata (12 925 termék, 10 főkategória, 63 alkategória) új, egységes dizájnban.
+
+## Megnyitás
+
+Nyisd meg az `index.html` fájlt böngészőben, vagy tedd fel bármilyen statikus tárhelyre (Netlify, Vercel, Apache/Nginx). Szerveroldali futtatás nem kell hozzá.
+
+## Oldalak
+
+| Útvonal | Tartalom |
+|---|---|
+| `#/` | Főoldal: hero, előnyök, kategóriák, akciós kampányok, népszerű / akciós / új termékek, tanácsadás, üzletek, hűségprogram, hírlevél, blog, márkák |
+| `#/kategoriak` | Összes kategória és alkategória |
+| `#/kategoria/<főkat>[/<alkat>]` | Terméklista szűrőkkel (akciós, újdonság, ár, márka, méret) és rendezéssel |
+| `#/termek/<id>` | Termékoldal: galéria nagyítással, méretválasztó, mennyiség, MilPay-részlet, szállítási infó, leírás, hasonló termékek |
+| `#/akciok`, `#/ujdonsagok` | Akciós és új termékek, főkategória-szűrővel |
+| `#/markak`, `#/marka/<név>` | Márkák A–Z és márkaoldalak |
+| `#/kereses?q=` | Keresés (ékezetfüggetlen), azonnali javaslatokkal a fejlécben |
+| `#/kosar`, `#/penztar`, `#/koszonjuk` | Kosár, pénztár, visszaigazolás |
+| `#/kedvencek` | Kedvencek |
+| `#/uzleteink`, `#/szallitas`, `#/kapcsolat`, `#/tanacsadas`, `#/torzsvasarlo` | Információs oldalak |
+
+## Mappák
+
+```
+index.html            oldalváz, fejléc, lábléc, ikonok
+assets/style.css      teljes dizájn (reszponzív, 3 töréspont)
+assets/app.js         útválasztás, oldalak, szűrés, kosár, pénztár
+data/products.js      termékkatalógus (név, márka, ár, akciós ár, méretek, kép, kategória)
+data/details/*.js     termékleírások + galériák, 128 darabban, igény szerint töltődnek
+scripts/              adatgyűjtő és összeállító szkriptek
+raw/                  letöltött nyers adatok (élesítéshez nem kell)
+```
+
+## Adatok frissítése
+
+```
+python3 -I scripts/scrape.py raw      # terméklisták (rm -r raw/pages előtte a friss árakhoz)
+python3 -I scripts/details.py raw     # leírások, galériák (csak az újakat tölti le)
+python3 -I scripts/build.py raw data  # data/ újragenerálása
+```
+
+## Élesítés előtt
+
+1. **Rendelésfogadás:** a pénztár egy JSON-rendelést állít össze (vevő, szállítás, fizetés, tételek cikkszámmal). Ha az `index.html`-ben beállítod a `window.KB_ORDER_ENDPOINT = 'https://…/api/order'` értéket, a rendelés ide megy POST kéréssel. Enélkül csak a böngészőben rögzül. A fogadó oldalt (OpenCart API vagy saját végpont) a webshop fejlesztőjének kell bekötnie, a bankkártyás fizetést pedig a SimplePay / MilPay átirányítással.
+2. **Árak és készlet:** a katalógus egy pillanatkép. Éles üzemben a `data/products.js`-t rendszeresen újra kell generálni (pl. éjszakai cron), vagy a webshop API-jából kell kiszolgálni ugyanebben a formátumban.
+3. **Képek:** a képek közvetlenül a kangaboo.hu-ról töltődnek be, így ott elérhetőnek kell maradniuk.
+4. **SEO:** az oldalak `#/` útvonalakat használnak. A Google indexeléséhez érdemes szerveroldali útvonalakra (`/termek/...`) és előre renderelt oldalakra váltani, ez a sablonnak az OpenCart témába való átültetésével oldható meg.

@@ -1,0 +1,1 @@
+window.KB_DETAILS={};
