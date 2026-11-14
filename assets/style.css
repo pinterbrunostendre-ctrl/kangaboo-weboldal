@@ -665,3 +665,12 @@ footer::after{content:"";display:block;height:5px;background:var(--stripe)}
 .loyal{border-top:8px solid var(--brand-pink)}
 .panel-badge{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;margin-bottom:14px}
 .panel-badge .icon{width:26px;height:26px}
+
+/* B1: valódi logókép fehér, lekerekített lapkán (sötét háttéren) */
+.logo-chip{display:inline-flex;align-items:center;background:#fff;border-radius:14px;padding:8px 14px;line-height:0}
+.logo-chip img{height:40px;width:auto}
+.logo-chip.sm{border-radius:10px;padding:6px 10px;align-self:flex-start}
+.logo-chip.sm img{height:26px}
+.drawer-logo{height:36px;width:auto}
+.card-visual{right:-22px;bottom:-4px}
+@media (max-width:640px){.loyal{padding-bottom:150px}.card-visual{right:-18px;bottom:-14px}}

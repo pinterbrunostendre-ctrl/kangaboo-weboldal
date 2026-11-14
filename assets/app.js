@@ -439,7 +439,7 @@ function loyaltyNews(){
       <div class="pts"><strong>2 pont</strong><span style="color:var(--on-dark)">minden elköltött 100 Ft után</span></div>
       <p>Igényeld ingyenes törzsvásárlói kártyádat, és gyűjts pontokat minden vásárlásod után.</p>
       <a href="https://kangaboo.hu/torzsvasarlok" target="_blank" rel="noopener" class="btn btn-coral" style="margin-top:1.8rem">Kártyát igénylek</a>
-      <div class="card-visual" aria-hidden="true"><b>Kangaboo</b><span>TÖRZSVÁSÁRLÓ</span></div>
+      <div class="card-visual" aria-hidden="true"><span class="logo-chip sm"><img src="https://kangaboo.hu/image/cache/data/xkangaboo_logo-264x81.png.pagespeed.ic.E0vdkCZP6I.png" alt="" width="104" height="32"></span><span>TÖRZSVÁSÁRLÓ</span></div>
     </div>
     <div class="news">
       <span class="panel-badge" style="background:var(--brand-sun);color:var(--ink)" aria-hidden="true">${icon('i-mail')}</span>
