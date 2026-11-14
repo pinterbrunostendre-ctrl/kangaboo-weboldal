@@ -83,8 +83,8 @@ for t in tops:
         q=[p for p in P if sb['id'] in p['c']]
         sz[f'facet/sub-{sb["id"]}.js']=W(f'facet/sub-{sb["id"]}.js',facet('sub-'+sb['id'],q,q[:24]))
 sale=[p for p in P if p['_d']>0]; new=[p for p in P if p.get('w')]
-sz['facet/sale.js']=W('facet/sale.js',facet('sale',sale,disc_sort(sale)[:24]))
-sz['facet/new.js']=W('facet/new.js',facet('new',new,new[:24]))
+sz['facet/sale.js']=W('facet/sale.js',facet('sale',sale,sale[:24]))
+sz['facet/new.js']=W('facet/new.js',facet('new',new,sorted(new,key=lambda p:-int(p['i']))[:24]))
 # --- márkák: név + darabszám (+ fájlnév), márkánként külön szűrőfájl ---
 def bslug(k):
     a=unicodedata.normalize('NFKD',k.lower()).encode('ascii','ignore').decode()

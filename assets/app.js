@@ -456,13 +456,13 @@ function loyaltyNews(){
 }
 
 /* ---------- listing (category / brand / search / sale / new) ---------- */
-const SORTS={pop:'Népszerűség',new:'Újdonságok elöl',asc:'Ár szerint növekvő',desc:'Ár szerint csökkenő',disc:'Legnagyobb kedvezmény',name:'Név (A–Z)'};
+const SORTS={latest:'Legújabb elöl',pop:'Népszerűség',new:'Újdonságok elöl',asc:'Ár szerint növekvő',desc:'Ár szerint csökkenő',disc:'Legnagyobb kedvezmény',name:'Név (A–Z)'};
 const PAGE=24;
 let L=null; // current listing state
 function listing(opt){
   // opt: {key, head, base[], chips:[{id,label,n,href,on}], defaultSort}
   if(!L||L.key!==opt.key){ L={key:opt.key,brands:new Set(),sizes:new Set(),min:'',max:'',sale:false,nw:false,sort:opt.defaultSort||'pop',shown:PAGE,bq:''}; }
-  app.innerHTML=`${opt.head}
+  app.innerHTML=`${opt.head}${opt.pre||''}
   <div class="wrap">
     ${opt.chips&&opt.chips.length?`<div class="chips">${opt.chips.map(c=>`<a class="chip ${c.on?'on':''}" href="${c.href}">${esc(c.label)} <span>${c.n}</span></a>`).join('')}</div>`:''}
     <div class="listing">
@@ -471,7 +471,7 @@ function listing(opt){
         <div class="toolbar">
           <button class="btn btn-soft filter-btn" onclick="openFilters(this)" aria-haspopup="dialog">${icon('i-filter','sm')}Szűrők</button>
           <div class="res" id="res"></div>
-          <select id="sort" aria-label="Rendezés">${Object.entries(SORTS).map(([k,v])=>`<option value="${k}" ${L.sort===k?'selected':''}>${v}</option>`).join('')}</select>
+          <select id="sort" aria-label="Rendezés">${Object.entries(SORTS).filter(([k])=>(opt.sorts||Object.keys(SORTS).filter(x=>x!=='latest')).includes(k)).map(([k,v])=>`<option value="${k}" ${L.sort===k?'selected':''}>${v}</option>`).join('')}</select>
         </div>
         <div class="active-f" id="activeF"></div>
         <div class="products" id="grid"></div>
@@ -496,6 +496,7 @@ function listing(opt){
       case 'desc': a.sort((x,y)=>(y.p||0)-(x.p||0)); break;
       case 'disc': a.sort((x,y)=>y.d-x.d||x.k-y.k); break;
       case 'name': a.sort((x,y)=>x.n.localeCompare(y.n,'hu')); break;
+      case 'latest': a.sort((x,y)=>(+y.i)-(+x.i)); break;   // közelítés: a webshop sorban növekvő termékazonosítót ad
       case 'new': a.sort((x,y)=>(y.w|0)-(x.w|0)||x.k-y.k); break;
       default: a.sort((x,y)=>x.k-y.k);
     }
@@ -524,8 +525,8 @@ function listing(opt){
     $('#filters').innerHTML=`
       <div class="fsheet-head"><h3>Szűrők</h3><button class="icon-btn" onclick="closeFilters()" aria-label="Szűrők bezárása">${icon('i-close')}</button></div>
       <div class="fgroup"><h4>Gyors szűrők</h4>
-        <label class="toggle">Csak akciós termékek<input type="checkbox" id="fSale" ${L.sale?'checked':''}></label>
-        <label class="toggle">Csak újdonságok<input type="checkbox" id="fNew" ${L.nw?'checked':''}></label>
+        ${opt.hideSale?'':`<label class="toggle">Csak akciós termékek<input type="checkbox" id="fSale" ${L.sale?'checked':''}></label>`}
+        ${opt.hideNew?'':`<label class="toggle">Csak újdonságok<input type="checkbox" id="fNew" ${L.nw?'checked':''}></label>`}
       </div>
       <div class="fgroup"><h4>Ár (Ft)</h4>
         <div class="prange"><input type="number" id="fMin" placeholder="${pmin}" value="${esc(L.min)}" min="0" inputmode="numeric" aria-label="Minimum ár"><span>–</span><input type="number" id="fMax" placeholder="${pmax}" value="${esc(L.max)}" min="0" inputmode="numeric" aria-label="Maximum ár"></div>
@@ -539,8 +540,8 @@ function listing(opt){
       </div>`:''}
       <div class="fsheet-foot"><button class="btn btn-primary btn-block" onclick="closeFilters()">Találatok mutatása</button></div>`;
     const f=$('#filters');
-    $('#fSale',f).onchange=e=>{L.sale=e.target.checked;L.shown=PAGE;draw();};
-    $('#fNew',f).onchange=e=>{L.nw=e.target.checked;L.shown=PAGE;draw();};
+    const fs=$('#fSale',f); if(fs) fs.onchange=e=>{L.sale=e.target.checked;L.shown=PAGE;draw();};
+    const fn=$('#fNew',f); if(fn) fn.onchange=e=>{L.nw=e.target.checked;L.shown=PAGE;draw();};
     let pd; const pr=()=>{clearTimeout(pd);pd=setTimeout(()=>{L.min=$('#fMin').value;L.max=$('#fMax').value;L.shown=PAGE;draw(true);},400)};
     $('#fMin',f).oninput=pr; $('#fMax',f).oninput=pr;
     $$('[data-brand]',f).forEach(c=>c.onchange=()=>{const b=c.dataset.brand; c.checked?L.brands.add(b):L.brands.delete(b); L.shown=PAGE; draw();});
@@ -617,13 +618,17 @@ function topChips(base,href){
   const c={}; base.forEach(p=>p.t.forEach(t=>c[t]=(c[t]||0)+1));
   return KB.tops.filter(t=>c[t.id]).map(t=>({label:t.name,n:c[t.id],href:href(t.id),on:false}));
 }
+function campaignsHTML(){
+  const act=activePromos(); if(!act.length) return '';
+  return `<div class="wrap"><h2 class="camp-title">Érvényes kampányok</h2><div class="camps">${act.map(p=>`<a href="#/marka/${encodeURIComponent(p[0])}" class="camp"><img src="https://kangaboo.hu/image/cache/data/IAKCIO/${p[4]}" alt="${esc(p[0])} akció" loading="lazy" onerror="imgFail(this)"><div><b>${esc(p[1])}</b><span>${esc(p[0])} · ${leftLabel(p[3])}</span></div></a>`).join('')}</div></div>`;
+}
 function pageSale(q){
   if(!FACETS.sale) return need(()=>ensureFacet('sale'),()=>pageSale(q),'list');
   const tf=q.get('k'); let base=FACETS.sale;
   const all=base; if(tf) base=base.filter(p=>p.t.includes(tf));
   document.title='Akciók – Kangaboo';
   const chips=[{label:'Összes',n:all.length,href:'#/akciok',on:!tf},...topChips(all,id=>'#/akciok?k='+id).map(c=>({...c,on:c.href.endsWith('='+tf)}))];
-  listing({key:'sale'+tf,head:simpleHead('Akciós termékek',`${all.length} termék kedvezményes áron, akár ${Math.max(0,...all.map(p=>p.d))}% kedvezménnyel. Az akciók a készlet erejéig érvényesek.`,[['Akciók']],'Akciók'),base,chips,defaultSort:'disc'});
+  listing({key:'sale'+tf,head:simpleHead('Akciós termékek',`${all.length} termék kedvezményes áron, akár ${Math.max(0,...all.map(p=>p.d))}% kedvezménnyel. Az akciók a készlet erejéig érvényesek.`,[['Akciók']],'Akciók'),base,chips,hideSale:true,pre:campaignsHTML()});
 }
 function pageNew(q){
   if(!FACETS.new) return need(()=>ensureFacet('new'),()=>pageNew(q),'list');
@@ -631,7 +636,7 @@ function pageNew(q){
   const all=base; if(tf) base=base.filter(p=>p.t.includes(tf));
   document.title='Újdonságok – Kangaboo';
   const chips=[{label:'Összes',n:all.length,href:'#/ujdonsagok',on:!tf},...topChips(all,id=>'#/ujdonsagok?k='+id).map(c=>({...c,on:c.href.endsWith('='+tf)}))];
-  listing({key:'new'+tf,head:simpleHead('Újdonságok',`${all.length} frissen érkezett termék a teljes kínálatból.`,[['Újdonságok']],'Frissen érkezett'),base,chips});
+  listing({key:'new'+tf,head:simpleHead('Újdonságok',`${all.length} frissen érkezett termék a teljes kínálatból.`,[['Újdonságok']],'Frissen érkezett'),base,chips,hideNew:true,defaultSort:'latest',sorts:['latest','pop','asc','desc','disc','name']});
 }
 function pageBrand(name,q){
   if(!BRANDS) return need(ensureBrands,()=>pageBrand(name,q),'list');
