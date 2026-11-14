@@ -849,6 +849,50 @@ function pageThanks(){
     </div></div>`;
 }
 
+
+/* ---------- bemutató összefoglaló a cégvezetőnek ---------- */
+function pageDemo(){
+  document.title='A bemutatóról – Kangaboo';
+  const subN=KB.tops.reduce((a,t)=>a+t.subs.length,0);
+  const li=a=>`<ul class="demo-list">${a.map(x=>`<li><span class="ck">${icon('i-check')}</span><span>${x}</span></li>`).join('')}</ul>`;
+  const step=(n,title,body)=>`<div class="info-card"><div class="ui" style="background:var(--lilac);color:var(--ink);font-family:var(--serif);font-weight:700;font-size:1.3rem">${n}</div><h3>${title}</h3><p>${body}</p></div>`;
+  app.innerHTML=simpleHead('A bemutatóról','Ez az oldal a Kangaboo webáruház újratervezett felületét mutatja be a jelenlegi kangaboo.hu tartalmával. Nem éles bolt: rendelést, üzenetet és feliratkozást nem fogad.',[['A bemutatóról']],'Összefoglaló')+`<div class="wrap" style="padding-bottom:90px;display:grid;gap:28px">
+  <div class="info-card">
+    <h3>Mi van benne</h3>
+    ${li([`A kangaboo.hu kategóriáiban szereplő teljes kínálat: <b>${KB.total.toLocaleString('hu-HU')} termék</b>, ${KB.tops.length} főkategória, ${subN} alkategória, ${KB.brandCount} márka – névvel, árral, akciós árral, méretekkel és fotóval.`,
+      `${esc(asofText())}. Az árak és a készlet ennek a napnak az állapotát mutatják, azóta változhattak.`,
+      `Részletes termékleírás és képgaléria 1 051 terméknél van. A többinél a termékoldal az eredeti kangaboo.hu-s oldalra mutat.`,
+      `Az aktuális kampányok az eredeti főoldalról, a lejárati dátumukig jelennek meg.`])}
+  </div>
+  <div class="info-card">
+    <h3>Mi változott a jelenlegi kangaboo.hu-hoz képest</h3>
+    ${li([`<b>Felépítés és megjelenés:</b> a Kangaboo logó színeire épülő, egységes színvilág. A „Termékeink” lenyíló menü bal oldalán a főkategóriák, jobb oldalon az alkategóriák darabszámmal és a kategória legnagyobb kedvezményű termékeivel.`,
+      `<b>Terméklisták:</b> a jelenlegi oldal kategóriánként 37 terméket mutat oldalszámozással. Az új felület 24-esével tölti be a termékeket egy „Továbbiak betöltése” gombbal, és mutatja, hány termék látszik az összesből.`,
+      `<b>Keresés:</b> gépelés közben termékeket, kategóriákat és márkákat javasol, ékezetek nélkül is talál (pl. „cipo lany”), és a javaslatok nyilakkal is bejárhatók.`,
+      `<b>Szűrők:</b> csak akciós termékek, csak újdonságok, ártartomány, márka (kereshető listával), méret, valamint hatféle rendezés. A bekapcsolt szűrők címkeként látszanak, egyenként törölhetők.`,
+      `<b>Termékoldal:</b> nagyítható képgaléria, méretválasztó, a MilPay 4 havi részlet összege, a szállítási díj az adott termékárhoz igazítva, hasonló termékek és a márka további termékei.`,
+      `<b>Mobil nézet:</b> oldalról becsúszó menü, alulról felcsúszó szűrőpanel. Ellenőrizve 375, 768 és 1280 képpont szélességen, vízszintes görgetés nélkül.`,
+      `<b>Kezelhetőség:</b> a menü, a lenyíló menü, a szűrők, a keresés, a termékoldal, a kosár és a pénztár csak billentyűzettel is kezelhető. A főoldalon, a kategória-, termék-, kosár- és pénztároldalon mért szövegkontraszt legalább 4,5:1.`])}
+  </div>
+  <div>
+    <div class="sec-head" style="margin-bottom:18px"><div><span class="eyebrow">Pénztár</span><h2>A vásárlás lépései</h2></div></div>
+    <div class="info-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:0">
+      ${step(1,'Kosár','Mennyiség módosítása, szállítási mód választása, és jelzés arról, mennyi hiányzik a 30 000 Ft feletti ingyenes szállításhoz.')}
+      ${step(2,'Adatok','Név, telefonszám, e-mail. A szállítási mód szerint áruház, csomagpont vagy cím, kérésre céges számla.')}
+      ${step(3,'Fizetés','Bankkártya / OTP SimplePay, MilPay részletfizetés, utánvét (+590 Ft) vagy fizetés az áruházban. A végösszeg azonnal frissül.')}
+      ${step(4,'Visszaigazolás','Összefoglaló a rendelésről. A bemutatóban ez csak minta, és utána a megadott személyes adatok törlődnek a böngészőből.')}
+    </div>
+  </div>
+  <div class="info-card" style="background:var(--butter);border:0">
+    <h3>Mi kell ahhoz, hogy élesben is működjön</h3>
+    ${li([`<b>Rendelésfogadás és fizetés:</b> a pénztár most semmit nem küld el. Be kell kötni a webáruház rendeléskezelőjébe, a bankkártyás fizetést pedig az OTP SimplePay és a MilPay rendszerébe.`,
+      `<b>Élő árak és készlet:</b> a katalógus most egy pillanatkép (${esc(huDate(KB.asof||''))}). Élesben a webáruház adatbázisából kell frissülnie, legalább naponta, és ugyanonnan kell betölteni a hiányzó termékleírásokat is. Áruházankénti készletadat jelenleg nincs benne.`,
+      `<b>Saját képtárolás:</b> a termék-, kampány- és üzletfotók most közvetlenül a kangaboo.hu-ról töltődnek be. Élesben saját tárhelyről kell kiszolgálni őket, hogy a régi oldal lekapcsolása után is megmaradjanak.`,
+      `<b>Keresőbarát címek:</b> a bemutató oldalai „#/” kezdetű címeket használnak, és a keresők számára szándékosan tiltva vannak. Élesben minden termék- és kategóriaoldalnak saját, olvasható címe kell legyen (például /babakocsi/…), szerveroldalon előállított tartalommal, hogy a Google indexelni tudja.`])}
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-primary" href="#/">Vissza a főoldalra</a><a class="btn btn-ghost" href="https://kangaboo.hu/" target="_blank" rel="noopener">A jelenlegi kangaboo.hu ${icon('i-ext','sm')}</a></div>
+  </div>`;
+}
 /* ---------- info pages ---------- */
 function pageStores(){
   document.title='Üzleteink – Kangaboo';
@@ -951,6 +995,7 @@ function route(){
     case 'kapcsolat': pageContact(); break;
     case 'tanacsadas': pageAdvice(); break;
     case 'torzsvasarlo': pageLoyal(); break;
+    case 'bemutato': pageDemo(); break;
     default: page404();
   }
 }
@@ -971,6 +1016,7 @@ document.addEventListener('keydown',e=>{
 buildNav(); buildSearch(); badge();
 if(KB.asof){
   const db=document.querySelector('#demoBar span'); if(db) db.insertAdjacentHTML('afterend',`<span class="asof">${esc(asofText())}</span>`);
+  if(db) db.parentNode.insertAdjacentHTML('beforeend','<a class="demo-link" href="#/bemutato">Mi változott? →</a>');
   const fb=document.querySelector('.f-bottom > span'); if(fb) fb.insertAdjacentHTML('afterend',`<span>${esc(asofText())}</span>`);
 }
 lastPath=location.hash.split('?')[0];
