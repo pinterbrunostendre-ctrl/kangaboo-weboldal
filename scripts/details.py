@@ -20,18 +20,35 @@ def parse(h):
 if __name__=='__main__' and len(sys.argv)>2 and sys.argv[2]=='test':
     print(json.dumps(parse(open(os.path.join(R,'prod.html'),encoding='utf-8').read()),ensure_ascii=False,indent=1)); sys.exit()
 prods=json.load(open(os.path.join(R,'products.json')))
+byid={p['id']:p for p in prods}
 outp=os.path.join(R,'details.json')
 det=json.load(open(outp)) if os.path.exists(outp) else {}
-todo=[p for p in prods if p['id'] not in det]
-print('todo',len(todo),flush=True)
+# ha van fontossági lista (scripts/priority.py), csak azt tölti le, abban a sorrendben
+pri=os.path.join(R,'priority.json')
+ids=json.load(open(pri)) if os.path.exists(pri) else [p['id'] for p in prods]
+todo=[byid[i] for i in ids if i in byid and i not in det]   # a már letöltötteket nem kéri le újra
+PAUSE=1.5   # legalább ennyi másodperc két kérés között
+print('letöltendő',len(todo),'| már megvan',len(det),flush=True)
+def save(): 
+    tmp=outp+'.tmp'; json.dump(det,open(tmp,'w'),ensure_ascii=False); os.replace(tmp,outp)
+def stop(msg):
+    save(); print('MEGÁLLT:',msg,'| leírások összesen:',len(det),flush=True); sys.exit(2)
+errs=0
 for n,p in enumerate(todo):
     try:
         h=urllib.request.urlopen(urllib.request.Request(p['url'],headers={'User-Agent':UA,'Accept-Language':'hu'}),timeout=40).read().decode('utf-8','replace')
+    except urllib.error.HTTPError as e:
+        if e.code in (403,429,503): stop(f'a szerver blokkol (HTTP {e.code}) a(z) {n+1}. kérésnél, termék {p["id"]}')
+        errs+=1; print('HIBA',p['id'],e,flush=True)
+        if errs>=3: stop('három hiba egymás után')
+        time.sleep(30); continue
     except Exception as e:
-        print('ERR',p['id'],e,flush=True); time.sleep(15); continue
-    if 'Just a moment' in h[:600]: print('BLOCKED at',n,flush=True); time.sleep(120); continue
+        errs+=1; print('HIBA',p['id'],e,flush=True)
+        if errs>=3: stop('három hálózati hiba egymás után')
+        time.sleep(30); continue
+    if 'Just a moment' in h[:600]: stop(f'védelmi (Cloudflare) oldal a(z) {n+1}. kérésnél, termék {p["id"]}')
+    errs=0
     det[p['id']]=parse(h)
-    if n%50==0:
-        json.dump(det,open(outp,'w'),ensure_ascii=False); print(n,len(det),flush=True)
-    time.sleep(0.7)
-json.dump(det,open(outp,'w'),ensure_ascii=False); print('DONE',len(det))
+    if n%25==0: save(); print(n+1,'/',len(todo),'| összesen',len(det),flush=True)
+    time.sleep(PAUSE)
+save(); print('KÉSZ | leírások összesen:',len(det),flush=True)

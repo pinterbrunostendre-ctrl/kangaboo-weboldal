@@ -861,7 +861,7 @@ function pageDemo(){
     <h3>Mi van benne</h3>
     ${li([`A kangaboo.hu kategóriáiban szereplő teljes kínálat: <b>${KB.total.toLocaleString('hu-HU')} termék</b>, ${KB.tops.length} főkategória, ${subN} alkategória, ${KB.brandCount} márka – névvel, árral, akciós árral, méretekkel és fotóval.`,
       `${esc(asofText())}. Az árak és a készlet ennek a napnak az állapotát mutatják, azóta változhattak.`,
-      `Részletes termékleírás és képgaléria 1 051 terméknél van. A többinél a termékoldal az eredeti kangaboo.hu-s oldalra mutat.`,
+      `Részletes termékleírás és képgaléria ${(KB.detailCount||0).toLocaleString('hu-HU')} terméknél van. A többinél a termékoldal az eredeti kangaboo.hu-s oldalra mutat.`,
       `Az aktuális kampányok az eredeti főoldalról, a lejárati dátumukig jelennek meg.`])}
   </div>
   <div class="info-card">

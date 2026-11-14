@@ -50,7 +50,10 @@ subN={}
 for p in P:
     for c in p['c']: subN[c]=subN.get(c,0)+1
 mega={t['id']:[pub(p) for p in sorted([p for p in P if t['id'] in p['_t'] and p['m'] and p['_d']>0],key=lambda p:-p['_d'])[:4]] for t in tops}
-home={'tops':tops,'asof':ASOF,'total':len(P),'saleCount':sum(1 for p in P if p['_d']>0),'brandCount':len(brands),
+dp=os.path.join(R,'details.json'); det=json.load(open(dp)) if os.path.exists(dp) else {}
+ids={p['i'] for p in P}
+det={k:v for k,v in det.items() if k in ids and v}
+home={'detailCount':len(det),'tops':tops,'asof':ASOF,'total':len(P),'saleCount':sum(1 for p in P if p['_d']>0),'brandCount':len(brands),
       'topBrands':sorted(brands.values(),key=lambda b:-b['n'])[:10],'topN':topN,'subN':subN,
       'popular':[pub(p) for p in popular],'deals':[pub(p) for p in deals],'news':[pub(p) for p in news],'mega':mega}
 sz={'home.js':W('home.js','window.KB_HOME='+J(home)+';')}
@@ -68,9 +71,6 @@ sz['idmap.js']=W('idmap.js','KB_IDMAP('+J({'t':{p['i']:''.join(str(TOPIDX[x]) fo
 print(len(P),'products'); [print(f'  {k}: {v//1024} KB') for k,v in sz.items()]
 print('with sizes',sum(1 for p in P if p.get('s')),'new',sum(1 for p in P if p.get('w')),'sale',sum(1 for p in P if p.get('o')),'noimg',sum(1 for p in P if not p['m']))
 
-dp=os.path.join(R,'details.json'); det=json.load(open(dp)) if os.path.exists(dp) else {}
-ids={p['i'] for p in P}
-det={k:v for k,v in det.items() if k in ids and v}
 for v in det.values():
     if 'g' in v: v['g']=[g.replace('https://kangaboo.hu/image/cache/','') for g in v['g']]
 import shutil
