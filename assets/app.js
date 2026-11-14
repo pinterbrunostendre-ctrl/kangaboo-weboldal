@@ -28,7 +28,8 @@ const ft = n => n==null ? '' : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d
 const icon = (id,cls='') => `<svg class="icon ${cls}"><use href="#${id}"/></svg>`;
 const store = {
   get(k,d){try{const v=localStorage.getItem('kb_'+k);return v?JSON.parse(v):d}catch(e){return d}},
-  set(k,v){try{localStorage.setItem('kb_'+k,JSON.stringify(v))}catch(e){}}
+  set(k,v){try{localStorage.setItem('kb_'+k,JSON.stringify(v))}catch(e){}},
+  del(k){try{localStorage.removeItem('kb_'+k)}catch(e){}}
 };
 window.go = h => { location.hash = h; };
 
@@ -228,7 +229,6 @@ function adviceHTML(){
       <ul>
         <li><span class="ck">${icon('i-check')}</span>Milyen szempontok alapján válassz babakocsit, autósülést?</li>
         <li><span class="ck">${icon('i-check')}</span>Mire lesz szükséged a születés utáni első hetekben?</li>
-        <li><span class="ck">${icon('i-check')}</span>Személyre szabott babakelengye-lista</li>
       </ul>
     </div>
     <form class="form-card" onsubmit="event.preventDefault();toast('Bemutató: a visszahíváskérés nem került elküldésre, az adatok nem kerültek továbbításra.');this.reset()">
@@ -321,7 +321,7 @@ function loyaltyNews(){
       <span class="eyebrow">Törzsvásárlói program</span>
       <h2>Vásárolj és gyűjts pontokat</h2>
       <div class="pts"><strong>2 pont</strong><span style="color:var(--on-dark)">minden elköltött 100 Ft után</span></div>
-      <p>Igényeld ingyenes törzsvásárlói kártyádat, és váltsd be pontjaidat a következő vásárlásodkor – online és az áruházakban is.</p>
+      <p>Igényeld ingyenes törzsvásárlói kártyádat, és gyűjts pontokat minden vásárlásod után.</p>
       <a href="https://kangaboo.hu/torzsvasarlok" target="_blank" rel="noopener" class="btn btn-coral" style="margin-top:1.8rem">Kártyát igénylek</a>
       <div class="card-visual" aria-hidden="true"><b>Kangaboo</b><span>TÖRZSVÁSÁRLÓ</span></div>
     </div>
@@ -571,7 +571,7 @@ function pageProduct(id){
       <div class="acc">
         <details open><summary>Termékleírás${icon('i-chev')}</summary><div class="acc-body">${d.d&&d.d.length?`<ul>${d.d.map(x=>`<li>${esc(x.replace(/^[•\-–]\s*/,''))}</li>`).join('')}</ul>`:`<p>A termék részletes leírása, méretei és műszaki adatai a <a href="${ORIGIN+esc(p.u)}" target="_blank" rel="noopener" style="text-decoration:underline">kangaboo.hu termékoldalán</a> olvashatók.</p>`}</div></details>
         <details><summary>Szállítás és fizetés${icon('i-chev')}</summary><div class="acc-body"><ul><li>Átvétel áruházban: ingyenes</li><li>GLS / MPL csomagpont: 1 190 / 1 290 Ft</li><li>Házhozszállítás GLS / MPL: 1 590 / 2 990 Ft</li><li>30 000 Ft felett a szállítás ingyenes</li><li>Fizetés: bankkártya, SimplePay, MilPay, utánvét (+590 Ft)</li></ul></div></details>
-        <details><summary>Elérhetőség áruházainkban${icon('i-chev')}</summary><div class="acc-body"><p style="margin-bottom:10px">Rendeld meg online, és vedd át díjmentesen:</p><div class="avail">${STORES.map(st=>`<div><span>${esc(st[0])}</span><i>Átvehető</i></div>`).join('')}</div></div></details>
+        <details><summary>Elérhetőség áruházainkban${icon('i-chev')}</summary><div class="acc-body"><p style="margin-bottom:10px">Online rendelés után bármelyik áruházunkban díjmentesen átvehető:</p><div class="avail">${STORES.map(st=>`<div><span>${esc(st[0])}</span></div>`).join('')}</div></div></details>
         <details><summary>Tanácsra van szükséged?${icon('i-chev')}</summary><div class="acc-body"><p>Hívd ügyfélszolgálatunkat (<a href="tel:+36205396930">+36 20 539 6930</a>, H–P 8–15h), vagy <a href="#/tanacsadas" style="text-decoration:underline">kérj ingyenes szakmai tanácsadást</a>.</p></div></details>
       </div>
       <a class="ext" href="${ORIGIN+esc(p.u)}" target="_blank" rel="noopener">${icon('i-ext','xs')}Megnyitás az eredeti kangaboo.hu oldalon</a>
@@ -713,7 +713,9 @@ function pageCheckout(){
           const r=await fetch(window.KB_ORDER_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(order)});
           if(!r.ok) throw new Error('HTTP '+r.status);
         }
-        store.set('lastOrder',order); cart=[]; saveCart(); go('#/koszonjuk');
+        // bemutató: személyes adat nem marad a böngészőben
+        store.set('lastOrder',{id:order.id,shipping:{label:order.shipping.label},payment:{label:order.payment.label},items:order.items.map(x=>({name:x.name,qty:x.qty})),total:order.total});
+        store.del('checkout'); cart=[]; saveCart(); go('#/koszonjuk');
       }catch(err){ btn.disabled=false; btn.textContent='Megrendelés elküldése (fizetési kötelezettséggel)'; $('#coErr').textContent='A rendelés elküldése nem sikerült. Kérjük, próbáld újra, vagy hívd ügyfélszolgálatunkat: +36 20 539 6930.'; }
     };
   };
@@ -731,7 +733,7 @@ function pageThanks(){
       <p class="demo-note" style="justify-content:center">Ez bemutató: rendelés nem jött létre, és az adatok nem kerültek elküldésre.</p>
       <p style="color:var(--ink-2)">Minta rendelésszám: <b>${esc(o.id)}</b></p>
       <div class="perks" style="text-align:left;margin:26px 0">
-        <div>${icon('i-truck')}<div><b>${esc(o.shipping.label)}</b><span>${o.shipping.store?esc(o.shipping.store)+' – 1–3 munkanapon belül átvehető':o.shipping.point?esc(o.shipping.point):o.shipping.address?esc(o.shipping.address.zip+' '+o.shipping.address.city+', '+o.shipping.address.addr):''}</span></div></div>
+        <div>${icon('i-truck')}<div><b>${esc(o.shipping.label)}</b><span>Választott szállítási mód</span></div></div>
         <div>${icon('i-card')}<div><b>${esc(o.payment.label)}</b><span>Fizetendő: ${ft(o.total)}</span></div></div>
         <div>${icon('i-bag')}<div><b>${o.items.reduce((a,x)=>a+x.qty,0)} termék</b><span>${o.items.slice(0,3).map(x=>esc(x.name)).join(', ')}${o.items.length>3?'…':''}</span></div></div>
       </div>
@@ -770,7 +772,7 @@ function pageContact(){
   app.innerHTML=simpleHead('Kapcsolat','Kérdésed van egy termékkel vagy rendeléssel kapcsolatban? Írj nekünk, vagy hívd ügyfélszolgálatunkat.',[['Kapcsolat']],'Ügyfélszolgálat')+`<div class="wrap"><div class="contact-grid">
     <div style="display:grid;gap:18px;align-content:start">
       <div class="info-card"><div class="line">${icon('i-phone')}<div><b style="color:var(--ink)"><a href="tel:+36205396930">+36 20 539 6930</a></b><br>Hétfő–Péntek 8–15 óra</div></div>
-      <div class="line">${icon('i-mail')}<div><b style="color:var(--ink)"><a href="mailto:info@kangaboo.hu">info@kangaboo.hu</a></b><br>Válasz 1 munkanapon belül</div></div>
+      <div class="line">${icon('i-mail')}<div><b style="color:var(--ink)"><a href="mailto:info@kangaboo.hu">info@kangaboo.hu</a></b><br>Ügyfélszolgálat</div></div>
       <div class="line">${icon('i-pin')}<div><b style="color:var(--ink)">Kangaboo Kft.</b><br>1097 Budapest, Soroksári út 164.</div></div></div>
       <div class="info-card" style="background:var(--sage-l);border:0"><h3>Inkább személyesen?</h3><p>Látogass el valamelyik áruházunkba – kollégáink szívesen segítenek.</p><a href="#/uzleteink" class="link-arrow" style="justify-self:start">Üzleteink</a></div>
     </div>
@@ -790,7 +792,7 @@ function pageAdvice(){
 }
 function pageLoyal(){
   document.title='Törzsvásárlói program – Kangaboo';
-  app.innerHTML=simpleHead('Törzsvásárlói program','Minden elköltött 100 Ft után 2 pontot írunk jóvá, amit következő vásárlásodkor beválthatsz.',[['Törzsvásárlói program']],'Hűségprogram')+`<div style="padding-bottom:90px">${loyaltyNews()}</div>`;
+  app.innerHTML=simpleHead('Törzsvásárlói program','Minden elköltött 100 Ft után 2 pontot írunk jóvá.',[['Törzsvásárlói program']],'Hűségprogram')+`<div style="padding-bottom:90px">${loyaltyNews()}</div>`;
 }
 function page404(msg){
   document.title='Nem található – Kangaboo';
