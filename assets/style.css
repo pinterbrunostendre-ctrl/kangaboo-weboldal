@@ -108,7 +108,7 @@ nav.main .spacer{flex:1}
 .mega{position:absolute;top:100%;left:0;right:0;background:var(--surface);box-shadow:0 30px 60px rgba(74,36,76,.14);border-top:1px solid var(--line);opacity:0;visibility:hidden;transition:.18s;z-index:55}
 li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;visibility:visible}
 .mega.closed{opacity:0!important;visibility:hidden!important}
-.mega-in{max-width:var(--wrap);margin:0 auto;padding:24px;display:grid;grid-template-columns:300px 1fr;gap:28px;min-height:420px}
+.mega-in{max-width:var(--wrap);margin:0 auto;padding:24px;display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
 .mega-tops{display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--line);padding-right:16px}
 .mega-tops a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:12px;font-weight:600;font-size:.9rem}
 .mega-tops a .mi{width:34px;height:34px;border-radius:10px;display:grid;place-items:center}
@@ -704,3 +704,14 @@ footer::after{content:"";display:block;height:5px;background:var(--stripe)}
 .camp span{font-size:.78rem;color:var(--ink-2)}
 @media (max-width:960px){.camps{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.camps{grid-template-columns:1fr}}
+
+/* B5: nyitott lenyíló menü mögött elsötétülő oldal */
+.mega-scrim{position:fixed;inset:0;z-index:45;background:rgba(47,22,48,.42);opacity:0;visibility:hidden;transition:opacity .18s,visibility 0s .18s}
+body.mega-open .mega-scrim{opacity:1;visibility:visible;transition:opacity .18s}
+@media (max-width:960px){.mega-scrim{display:none}}
+.mega-in{grid-template-columns:minmax(420px,460px) 1fr}
+.mega-tops{display:grid;grid-template-columns:1fr 1fr;gap:2px 6px;align-content:start}
+.mega-tops a{padding:8px 10px;font-size:.86rem;gap:10px}
+.mega-tops a .chev{display:none}
+.mega-subs{grid-template-columns:repeat(2,1fr)}
+@media (min-width:1400px){.mega-subs{grid-template-columns:repeat(3,1fr)}}

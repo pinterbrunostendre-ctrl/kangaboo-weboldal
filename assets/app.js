@@ -203,8 +203,18 @@ function buildNav(){
   $$('.mega-tops a').forEach(a=>{ a.addEventListener('mouseenter',()=>show(a.dataset.top)); a.addEventListener('focus',()=>show(a.dataset.top)); });
   $('.has-mega > a').addEventListener('focus',()=>$('#mega').classList.remove('closed'));
   if(KB.tops[0]) show(KB.tops[0].id);
-  mega.addEventListener('click',e=>{ if(e.target.closest('a')){ mega.classList.add('closed'); } });
-  $('.has-mega').addEventListener('mouseleave',()=>mega.classList.remove('closed'));
+  // nyitott menü: a mögötte lévő oldal elsötétül; a sötét rétegre kattintva bezárul
+  const hm=$('.has-mega'), scrim=document.createElement('div');
+  scrim.className='mega-scrim'; scrim.setAttribute('aria-hidden','true'); document.body.appendChild(scrim);
+  const isOpen=()=>!mega.classList.contains('closed')&&(hm.matches(':hover')||hm.contains(document.activeElement));
+  const sync=()=>document.body.classList.toggle('mega-open',isOpen());
+  window.closeMega=()=>{ mega.classList.add('closed'); if(hm.contains(document.activeElement)) document.activeElement.blur(); sync(); };
+  hm.addEventListener('mouseenter',()=>{ mega.classList.remove('closed'); sync(); });
+  hm.addEventListener('mouseleave',()=>{ mega.classList.remove('closed'); setTimeout(sync,0); });
+  hm.addEventListener('focusin',()=>setTimeout(sync,0));
+  hm.addEventListener('focusout',()=>setTimeout(sync,0));
+  scrim.addEventListener('click',closeMega);
+  mega.addEventListener('click',e=>{ if(e.target.closest('a')){ mega.classList.add('closed'); setTimeout(sync,0); } });
 
   $('#drawerBody').innerHTML = KB.tops.map(t=>`<details><summary><span class="mi" style="background:${t.meta.bg};color:${t.meta.fg}">${icon(t.meta.i)}</span>${esc(t.name)}${icon('i-chev','sm chev')}</summary>
     <div class="dsubs"><a href="#/kategoria/${t.id}"><b>Összes ${esc(t.name.toLowerCase())}</b></a>${t.subs.map(s=>`<a href="#/kategoria/${t.id}/${s.id}">${esc(s.name)}</a>`).join('')}</div></details>`).join('')
@@ -1093,7 +1103,7 @@ window.addEventListener('scroll',()=>$('#hdr').classList.toggle('scrolled',scrol
 // Esc a lenyíló menüben: bezárja, és a fókusz a „Termékeink” linkre kerül
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape'||PANEL) return;
-  const mega=$('#mega'); if(mega.contains(document.activeElement)){ $('.has-mega > a').focus(); mega.classList.add('closed'); }
+  const mega=$('#mega'); if(mega.contains(document.activeElement)){ $('.has-mega > a').focus(); mega.classList.add('closed'); document.body.classList.remove('mega-open'); }
 });
 
 buildNav(); buildSearch(); badge();
