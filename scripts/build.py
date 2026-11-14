@@ -40,7 +40,12 @@ byid={p['i']:p for p in P}
 # főoldal
 featured=[byid[i] for i in feat if i in byid]
 popular=featured if len(featured)>=4 else [p for p in P if p['m']][:12]
-deals=sorted([p for p in P if p['_d']>0 and p['m']],key=lambda p:-p['_d'])[:16]
+dp=os.path.join(R,'details.json'); det=json.load(open(dp)) if os.path.exists(dp) else {}
+ids={p['i'] for p in P}
+det={k:v for k,v in det.items() if k in ids and v}
+# kiemelt akciók: elöl a leírással és galériával rendelkező termékek, azokon belül a nagyobb kedvezmény
+rich=lambda p:0 if (det.get(p['i'],{}).get('d') and det.get(p['i'],{}).get('g')) else 1
+deals=sorted([p for p in P if p['_d']>0 and p['m']],key=lambda p:(rich(p),-p['_d']))[:16]
 news=[p for p in P if p.get('w') and p['m']][:16]
 brands={}
 for p in P:
@@ -49,10 +54,7 @@ topN={t['id']:sum(1 for p in P if t['id'] in p['_t']) for t in tops}
 subN={}
 for p in P:
     for c in p['c']: subN[c]=subN.get(c,0)+1
-mega={t['id']:[pub(p) for p in sorted([p for p in P if t['id'] in p['_t'] and p['m'] and p['_d']>0],key=lambda p:-p['_d'])[:4]] for t in tops}
-dp=os.path.join(R,'details.json'); det=json.load(open(dp)) if os.path.exists(dp) else {}
-ids={p['i'] for p in P}
-det={k:v for k,v in det.items() if k in ids and v}
+mega={t['id']:[pub(p) for p in sorted([p for p in P if t['id'] in p['_t'] and p['m'] and p['_d']>0],key=lambda p:(rich(p),-p['_d']))[:4]] for t in tops}
 home={'detailCount':len(det),'tops':tops,'asof':ASOF,'total':len(P),'saleCount':sum(1 for p in P if p['_d']>0),'brandCount':len(brands),
       'topBrands':sorted(brands.values(),key=lambda b:-b['n'])[:10],'topN':topN,'subN':subN,
       'popular':[pub(p) for p in popular],'deals':[pub(p) for p in deals],'news':[pub(p) for p in news],'mega':mega}

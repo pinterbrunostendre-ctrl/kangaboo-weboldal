@@ -399,7 +399,7 @@ function pageHome(){
     <div class="rail" id="railPop">${popular.map(card).join('')}</div>
   </div></section>
   ${deals.length?`<section style="padding-top:0"><div class="wrap">
-    <div class="sec-head"><div><span class="eyebrow">Legnagyobb kedvezmények</span><h2>Akciós ajánlatok</h2></div><div style="display:flex;gap:16px;align-items:center"><a href="#/akciok" class="link-arrow">Mind</a>${railNav('railDeal')}</div></div>
+    <div class="sec-head"><div><span class="eyebrow">Kiemelt akciók</span><h2>Akciós ajánlatok</h2></div><div style="display:flex;gap:16px;align-items:center"><a href="#/akciok" class="link-arrow">Mind</a>${railNav('railDeal')}</div></div>
     <div class="rail" id="railDeal">${deals.map(card).join('')}</div>
   </div></section>`:''}
   ${news.length?`<section style="padding-top:0"><div class="wrap">
@@ -917,7 +917,7 @@ function pageDemo(){
   </div>
   <div class="info-card">
     <h3>Mi változott a jelenlegi kangaboo.hu-hoz képest</h3>
-    ${li([`<b>Felépítés és megjelenés:</b> a Kangaboo logó színeire épülő, egységes színvilág. A „Termékeink” lenyíló menü bal oldalán a főkategóriák, jobb oldalon az alkategóriák darabszámmal és a kategória legnagyobb kedvezményű termékeivel.`,
+    ${li([`<b>Felépítés és megjelenés:</b> a Kangaboo logó színeire épülő, egységes színvilág. A „Termékeink” lenyíló menü bal oldalán a főkategóriák, jobb oldalon az alkategóriák darabszámmal és a kategória négy kiemelt akciós terméke: elöl azok, amelyekhez részletes leírás és képgaléria tartozik, ezeken belül a nagyobb kedvezményűek.`,
       `<b>Terméklisták:</b> a jelenlegi oldal kategóriánként 37 terméket mutat oldalszámozással. Az új felület 24-esével tölti be a termékeket egy „Továbbiak betöltése” gombbal, és mutatja, hány termék látszik az összesből.`,
       `<b>Keresés:</b> gépelés közben termékeket, kategóriákat és márkákat javasol, ékezetek nélkül is talál (pl. „cipo lany”), és a javaslatok nyilakkal is bejárhatók.`,
       `<b>Szűrők:</b> csak akciós termékek, csak újdonságok, ártartomány, márka (kereshető listával), méret, valamint hatféle rendezés. A bekapcsolt szűrők címkeként látszanak, egyenként törölhetők.`,
