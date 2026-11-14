@@ -30,16 +30,21 @@ assets/app.js         útválasztás, oldalak, szűrés, kosár, pénztár
 data/products.js      termékkatalógus (név, márka, ár, akciós ár, méretek, kép, kategória)
 data/details/*.js     termékleírások + galériák, 128 darabban, igény szerint töltődnek
 scripts/              adatgyűjtő és összeállító szkriptek
-raw/                  letöltött nyers adatok (élesítéshez nem kell)
 ```
 
 ## Adatok frissítése
 
+A nyers adatok egy `raw/` munkamappába kerülnek, amely nem része a bemutatónak. Előbb ezt kell létrehozni, letölteni bele a főoldalt, és abból kinyerni a kategóriafát:
+
 ```
-python3 -I scripts/scrape.py raw      # terméklisták (rm -r raw/pages előtte a friss árakhoz)
-python3 -I scripts/details.py raw     # leírások, galériák (csak az újakat tölti le)
+mkdir -p raw && curl -sL -A "Mozilla/5.0" -o raw/home.html https://kangaboo.hu/
+python3 -I scripts/tree.py raw/home.html raw/cats.json
+python3 -I scripts/scrape.py raw      # terméklisták (friss árakhoz előtte töröld a raw/pages mappát)
+python3 -I scripts/details.py raw     # leírások, galériák (csak a még hiányzókat tölti le)
 python3 -I scripts/build.py raw data  # data/ újragenerálása
 ```
+
+A kangaboo.hu kb. 1 000 termékoldal lekérése után letiltotta a további letöltést (HTTP 403), ezért a leírások csak részben vannak meg.
 
 ## Élesítés előtt
 
