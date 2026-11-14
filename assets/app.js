@@ -813,7 +813,7 @@ function pageCart(){
     </div>`).join('')}</div>
     <aside class="summary">
       <h3>Összesítés</h3>
-      <div class="ship-bar">${free?'<b>🎉 Ingyenes szállítás!</b>':`Még <b>${ft(30000-sub)}</b> és ingyenes a szállítás`}<div class="bar"><i style="width:${Math.min(100,sub/300)}%"></i></div></div>
+      <div class="ship-bar">${free?'<b>🎉 Ingyenes szállítás!</b>':ship==='pickup'?`Az áruházi átvétel ingyenes. Házhozszállításnál és csomagpontnál még <b>${ft(30000-sub)}</b> hiányzik az ingyenes szállításhoz.`:`Még <b>${ft(30000-sub)}</b> és ingyenes a szállítás`}<div class="bar"><i style="width:${Math.min(100,sub/300)}%"></i></div></div>
       <div class="ship-opt">${Object.entries(SHIP).map(([k,v])=>`<label><input type="radio" name="ship" value="${k}" ${k===ship?'checked':''}>${v[0]}<span>${k==='pickup'||free?'Ingyenes':ft(v[1])}</span></label>`).join('')}</div>
       <div class="srow"><span>Részösszeg</span><span>${ft(sub)}</span></div>
       <div class="srow"><span>Szállítás</span><span>${shipCost?ft(shipCost):'Ingyenes'}</span></div>
