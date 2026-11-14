@@ -613,3 +613,19 @@ footer .wordmark em{color:var(--coral)}
 .demo-list li{display:flex;gap:12px;align-items:flex-start;color:var(--ink-2);font-size:.94rem;line-height:1.55}
 .demo-list b{color:var(--ink)}
 @media (max-width:640px){.demo-bar .demo-link{display:block;width:100%}}
+
+/* Termékadatok */
+.specs{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px 6px}
+.specs h2{font-size:1.15rem;margin-bottom:6px}
+.specs dl{display:grid}
+.specs dl > div{display:grid;grid-template-columns:minmax(110px,34%) 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:.9rem}
+.specs dl > div:first-child{border-top:0}
+.specs dt{color:var(--ink-2);font-weight:600}
+.specs dd{color:var(--ink);min-width:0;overflow-wrap:anywhere}
+.specs dd a{text-decoration:underline;text-underline-offset:2px}
+.specs dd a:hover{color:var(--coral-text)}
+.specs .sale-p{color:var(--coral-text)}
+.desc-later{background:var(--sand);border-radius:14px;padding:14px 16px;display:grid;gap:8px}
+.desc-later p{color:var(--ink-2);margin:0}
+.desc-later a{display:inline-flex;align-items:center;gap:6px;font-weight:600;text-decoration:underline;text-underline-offset:2px;justify-self:start}
+@media (max-width:640px){ .specs{padding:14px 16px 4px} .specs dl > div{grid-template-columns:38% 1fr;gap:10px;font-size:.86rem} }
