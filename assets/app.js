@@ -398,15 +398,15 @@ function pageHome(){
     <div class="sec-head"><div><span class="eyebrow">Népszerű most</span><h2>Legnépszerűbb termékek</h2></div>${railNav('railPop')}</div>
     <div class="rail" id="railPop">${popular.map(card).join('')}</div>
   </div></section>
-  ${deals.length?`<section style="padding-top:0"><div class="wrap">
+  ${deals.length?`<section class="band-pink"><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">Kiemelt akciók</span><h2>Akciós ajánlatok</h2></div><div style="display:flex;gap:16px;align-items:center"><a href="#/akciok" class="link-arrow">Mind</a>${railNav('railDeal')}</div></div>
     <div class="rail" id="railDeal">${deals.map(card).join('')}</div>
   </div></section>`:''}
-  ${news.length?`<section style="padding-top:0"><div class="wrap">
+  ${news.length?`<section class="band-blue"><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">Frissen érkezett</span><h2>Újdonságok</h2></div><div style="display:flex;gap:16px;align-items:center"><a href="#/ujdonsagok" class="link-arrow">Mind</a>${railNav('railNew')}</div></div>
     <div class="rail" id="railNew">${news.map(card).join('')}</div>
   </div></section>`:''}
-  <section style="padding-top:0"><div class="wrap">${adviceHTML()}</div></section>
+  <section><div class="wrap">${adviceHTML()}</div></section>
   <section style="background:var(--surface);border-top:1px solid var(--line)"><div class="wrap">
     <div class="sec-head"><div><span class="eyebrow">Üzleteink</span><h2>Gyere el, próbáld ki személyesen</h2><p>Hat tágas áruházban várunk – összesen 6 850 m² eladótéren.</p></div><a href="#/uzleteink" class="link-arrow">Részletek</a></div>
     ${storesHTML()}
