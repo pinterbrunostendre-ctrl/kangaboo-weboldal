@@ -384,8 +384,8 @@ function pageHome(){
     </div>
     <div class="collage fade-in">
       ${heroTiles.map((x,i)=>`<a href="${x.href}" class="tile ${i?'':'t1'}" style="background:${['var(--blush)','var(--sky)','var(--sage-l)'][i]}"><img src="${esc(x.src)}" alt="${esc(x.alt)}" ${x.contain?'style="object-fit:contain;background:#fff;padding:12px"':''} onerror="imgFail(this)"></a>`).join('')}
-      <div class="ribbon">${KB.saleCount} akciós termék</div>
-      <div class="float-card"><div class="fi">${icon('i-store')}</div><div><b>Rendeld online, vedd át ingyen</b><span>1–3 munkanapon belül, bármelyik áruházunkban</span></div></div>
+      
+      <div class="float-card"><a class="ribbon-in" href="#/akciok">${KB.saleCount} akciós termék →</a><div class="fi">${icon('i-store')}</div><div><b>Rendeld online, vedd át ingyen</b><span>1–3 munkanapon belül, bármelyik áruházunkban</span></div></div>
     </div>
   </div></section>
   <section class="usp" aria-label="Előnyeink"><div class="wrap">
