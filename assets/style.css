@@ -35,7 +35,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;letter-spacin
 .btn-ghost:hover{background:var(--ink);color:#fff}
 .btn-soft{background:var(--sand);color:var(--ink)}
 .btn-soft:hover{background:var(--sand-2)}
-.btn-block{width:100%}
+.btn-block{width:100%;white-space:normal;text-align:center}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 .icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .icon.sm{width:16px;height:16px}
@@ -116,10 +116,10 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 .mega-feat span{font-size:.78rem;color:var(--coral-text);font-weight:700}
 
 /* Drawer */
-.drawer{position:fixed;inset:0;z-index:90;pointer-events:none}
-.drawer .scrim{position:absolute;inset:0;background:rgba(47,22,48,.45);opacity:0;transition:.3s}
-.drawer .panel{position:absolute;top:0;left:0;bottom:0;width:min(360px,88vw);background:var(--bg);transform:translateX(-100%);transition:.3s;padding:18px 18px 40px;overflow-y:auto}
-.drawer.open{pointer-events:auto}
+.drawer{position:fixed;inset:0;z-index:90;pointer-events:none;visibility:hidden;transition:visibility 0s .3s}
+.drawer .scrim{position:absolute;inset:0;background:rgba(47,22,48,.45);opacity:0;transition:opacity .3s}
+.drawer .panel{position:absolute;top:0;left:0;bottom:0;width:min(360px,88vw);background:var(--bg);transform:translateX(-100%);transition:transform .3s;padding:18px 18px 40px;overflow-y:auto}
+.drawer.open{pointer-events:auto;visibility:visible;transition:none}
 .drawer.open .scrim{opacity:1}
 .drawer.open .panel{transform:none}
 .drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -157,7 +157,7 @@ li.has-mega:hover .mega,li.has-mega:focus-within .mega,.mega.force{opacity:1;vis
 
 /* Listing layout */
 .listing{display:grid;grid-template-columns:260px 1fr;gap:36px;padding:28px 0 90px;align-items:start}
-.listing > *,.pdp > *,.cart > *,.hero-grid > *{min-width:0}
+.listing > *,.pdp > *,.cart > *,.hero-grid > *,.info-card > *,.contact-grid > *{min-width:0}
 .filters{position:sticky;top:calc(150px + var(--demo-h));display:grid;gap:4px;max-height:calc(100vh - 170px);overflow:auto;padding-right:6px}
 .fgroup{border-bottom:1px solid var(--line);padding:16px 0}
 .fgroup h4{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between}
@@ -514,8 +514,8 @@ footer .wordmark em{color:var(--coral)}
   .listing{grid-template-columns:1fr}
   .listing .products{grid-template-columns:repeat(3,1fr)}
   .filter-btn{display:inline-flex}
-  .filters{position:fixed;inset:0;z-index:95;background:var(--bg);padding:18px 20px 100px;max-height:none;transform:translateY(100%);transition:.3s;top:0}
-  .filters.open{transform:none}
+  .filters{position:fixed;inset:0;z-index:95;background:var(--bg);padding:18px 20px 100px;max-height:none;transform:translateY(100%);transition:transform .3s,visibility 0s .3s;top:0;visibility:hidden}
+  .filters.open{transform:none;visibility:visible;transition:transform .3s}
   .fsheet-head{display:flex;justify-content:space-between;align-items:center;position:sticky;top:-18px;background:var(--bg);padding:8px 0;z-index:2}
   .fsheet-foot{position:fixed;left:0;right:0;bottom:0;padding:14px 20px;background:#fff;border-top:1px solid var(--line)}
   .gallery,.summary{position:static}
@@ -591,3 +591,20 @@ footer .wordmark em{color:var(--coral)}
 .sk-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
 .sk-img{aspect-ratio:1/1;border-radius:14px}
 @media (prefers-reduced-motion:reduce){.sk{animation:none}}
+
+/* Hiányzó kép helykitöltő */
+.ph-img{display:grid;place-items:center;width:100%;height:100%;background:var(--sand);color:var(--muted)}
+.ph-img .icon{width:28%;height:28%;max-width:40px;max-height:40px;min-width:16px;min-height:16px}
+.mega-feat .ph-img{width:56px;height:56px;border-radius:10px;flex-shrink:0}
+.thumbs .ph-img{border-radius:8px}
+/* Keskeny képernyőn a táblázat is elfér */
+@media (max-width:640px){
+  .table{font-size:.8rem}
+  .table th,.table td{padding:9px 8px}
+  .table th{letter-spacing:.02em;font-size:.68rem}
+}
+@media (max-width:640px){
+  .demo-bar svg{display:none}
+  .demo-bar .asof{display:block;width:100%;font-size:.78rem}
+  .demo-bar .asof::before{content:none}
+}
