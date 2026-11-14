@@ -447,7 +447,7 @@ function loyaltyNews(){
       <span class="eyebrow">Törzsvásárlói program</span>
       <h2>Vásárolj és gyűjts pontokat</h2>
       <div class="pts"><strong>2 pont</strong><span style="color:var(--on-dark)">minden elköltött 100 Ft után</span></div>
-      <p>Igényeld ingyenes törzsvásárlói kártyádat, és gyűjts pontokat minden vásárlásod után.</p>
+      <p>Igényelj törzsvásárlói kártyát, és gyűjts pontokat minden vásárlásod után.</p>
       <a href="https://kangaboo.hu/torzsvasarlok" target="_blank" rel="noopener" class="btn btn-coral" style="margin-top:1.8rem">Kártyát igénylek</a>
       <div class="card-visual" aria-hidden="true"><span class="logo-chip sm"><img src="https://kangaboo.hu/image/cache/data/xkangaboo_logo-264x81.png.pagespeed.ic.E0vdkCZP6I.png" alt="" width="104" height="32"></span><span>TÖRZSVÁSÁRLÓ</span></div>
     </div>
@@ -1037,7 +1037,18 @@ function pageAdvice(){
 }
 function pageLoyal(){
   document.title='Törzsvásárlói program – Kangaboo';
-  app.innerHTML=simpleHead('Törzsvásárlói program','Minden elköltött 100 Ft után 2 pontot írunk jóvá.',[['Törzsvásárlói program']],'Hűségprogram')+`<div style="padding-bottom:90px">${loyaltyNews()}</div>`;
+  // csak ellenőrzött adatok: pontszabály (kangaboo.hu főoldal), áruházak (kangaboo.hu/uzleteink)
+  const step=(n,c,title,body)=>`<div class="info-card"><div class="ui" style="background:${c};color:${n===1||n===2?'#fff':'var(--ink)'};font-weight:800;font-size:1.25rem">${n}</div><h3>${title}</h3><p>${body}</p></div>`;
+  app.innerHTML=simpleHead('Törzsvásárlói program','Minden elköltött 100 Ft után 2 pontot írunk jóvá.',[['Törzsvásárlói program']],'Hűségprogram')+`
+  <div class="wrap" style="padding-bottom:28px">
+    <h2 class="camp-title">Hogyan működik?</h2>
+    <div class="info-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:0">
+      ${step(1,'var(--brand-orange)','Kártyaigénylés','A törzsvásárlói kártya igénylésének menete a <a href="https://kangaboo.hu/torzsvasarlok" target="_blank" rel="noopener" style="text-decoration:underline">kangaboo.hu törzsvásárlói oldalán</a> olvasható.')}
+      ${step(2,'var(--brand-pink)','Pontgyűjtés','Minden elköltött 100 Ft után 2 pontot írunk jóvá. Például egy 10 000 Ft-os vásárlás után 200 pont jár.')}
+      ${step(3,'var(--brand-sun)','Áruházaink',STORES.map(st=>esc(st[0])).join(' · ')+'. <a href="#/uzleteink" style="text-decoration:underline">Címek és nyitvatartás</a>')}
+    </div>
+  </div>
+  <div style="padding-bottom:90px">${loyaltyNews()}</div>`;
 }
 function page404(msg){
   document.title='Nem található – Kangaboo';
