@@ -358,7 +358,7 @@ function adviceHTML(){
       </div>
       <div class="field"><label for="as">Melyik áruházban?</label><select id="as">${STORES.map(s=>`<option>${esc(s[0])}</option>`).join('')}</select></div>
       <div class="field"><label for="am">Miben segíthetünk? (opcionális)</label><textarea id="am" rows="3" placeholder="Pl. a 32. hétben vagyok, babakocsit és autósülést keresek…"></textarea></div>
-      <label class="consent"><input type="checkbox" required>Elolvastam és elfogadom az <a href="https://kangaboo.hu/adatvedelmi-szabalyzat" target="_blank" rel="noopener">adatvédelmi tájékoztatót</a>.</label>
+      <label class="consent"><input type="checkbox" required><span>Elolvastam és elfogadom az <a href="https://kangaboo.hu/adatvedelmi-szabalyzat" target="_blank" rel="noopener">adatvédelmi tájékoztatót</a>.</span></label>
       <button class="btn btn-primary">Visszahívást kérek</button>
     </form>
   </div>`;
@@ -855,12 +855,12 @@ function pageCheckout(){
         </div>
         <div class="form-card"><h3>3. Fizetési mód</h3>
           <div class="ship-opt">${payOpts.map(k=>`<label><input type="radio" name="pay" value="${k}" ${k===pay?'checked':''}>${PAY[k][0]}<span>${PAY[k][1]?'+'+ft(PAY[k][1]):''}</span></label>`).join('')}</div>
-          <label class="consent" style="margin-top:6px"><input type="checkbox" name="company" ${f.company?'checked':''}>Céges számlát kérek</label>
+          <label class="consent" style="margin-top:6px"><input type="checkbox" name="company" ${f.company?'checked':''}><span>Céges számlát kérek</span></label>
           ${f.company?`<div class="row2"><div class="field"><label for="fcn">Cégnév *</label><input id="fcn" name="cname" required value="${v('cname')}"></div><div class="field"><label for="fvat">Adószám *</label><input id="fvat" name="vat" required pattern="[0-9]{8}-?[0-9]-?[0-9]{2}" value="${v('vat')}" placeholder="12345678-1-12"></div></div>`:''}
         </div>
         <div class="form-card"><h3>4. Megjegyzés</h3>
           <div class="field"><label for="fnote">Megjegyzés a rendeléshez (opcionális)</label><textarea id="fnote" name="note" rows="3">${v('note')}</textarea></div>
-          <label class="consent"><input type="checkbox" name="news" ${f.news?'checked':''}>Feliratkozom a hírlevélre, és elsőként értesülök az akciókról.</label>
+          <label class="consent"><input type="checkbox" name="news" ${f.news?'checked':''}><span>Feliratkozom a hírlevélre, és elsőként értesülök az akciókról.</span></label>
         </div>
       </div>
       <aside class="summary">
@@ -870,7 +870,7 @@ function pageCheckout(){
         <div class="srow"><span>Szállítás</span><span>${shipCost?ft(shipCost):'Ingyenes'}</span></div>
         ${payCost?`<div class="srow"><span>Utánvét díja</span><span>${ft(payCost)}</span></div>`:''}
         <div class="srow total"><span>Fizetendő</span><span>${ft(sub+shipCost+payCost)}</span></div>
-        <label class="consent"><input type="checkbox" name="terms" required>Elolvastam és elfogadom az <a href="https://kangaboo.hu/aszf" target="_blank" rel="noopener">ÁSZF</a>-et és az <a href="https://kangaboo.hu/adatvedelmi-szabalyzat" target="_blank" rel="noopener">adatvédelmi tájékoztatót</a>. *</label>
+        <label class="consent"><input type="checkbox" name="terms" required><span>Elolvastam és elfogadom az <a href="https://kangaboo.hu/aszf" target="_blank" rel="noopener">ÁSZF</a>-et és az <a href="https://kangaboo.hu/adatvedelmi-szabalyzat" target="_blank" rel="noopener">adatvédelmi tájékoztatót</a>. *</span></label>
         <p class="demo-note">Bemutató: a gomb nem ad le valódi rendelést, az adatok nem kerülnek elküldésre.</p>
         <div id="coErr" role="alert" style="color:var(--coral-text);font-size:.85rem;font-weight:600"></div>
         <button class="btn btn-coral btn-block" id="coBtn">Megrendelés elküldése (fizetési kötelezettséggel)</button>
@@ -1011,7 +1011,7 @@ function pageContact(){
       <div class="row2"><div class="field"><label for="cn">Név</label><input id="cn" required></div><div class="field"><label for="ce">E-mail cím</label><input id="ce" type="email" required></div></div>
       <div class="field"><label for="ct">Téma</label><select id="ct"><option>Termékkel kapcsolatos kérdés</option><option>Rendelés állapota</option><option>Elállás, csere</option><option>Törzsvásárlói kártya</option><option>Egyéb</option></select></div>
       <div class="field"><label for="cm">Üzenet</label><textarea id="cm" rows="6" required></textarea></div>
-      <label class="consent"><input type="checkbox" required>Elfogadom az <a href="https://kangaboo.hu/adatvedelmi-szabalyzat" target="_blank" rel="noopener">adatvédelmi tájékoztatót</a>.</label>
+      <label class="consent"><input type="checkbox" required><span>Elfogadom az <a href="https://kangaboo.hu/adatvedelmi-szabalyzat" target="_blank" rel="noopener">adatvédelmi tájékoztatót</a>.</span></label>
       <button class="btn btn-primary">Üzenet küldése</button>
     </form>
   </div></div>`;
