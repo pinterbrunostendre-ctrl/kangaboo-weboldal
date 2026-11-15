@@ -751,20 +751,14 @@ function pageProduct(id){
         <dl>
           <div><dt>Márka</dt><dd><a href="#/marka/${encodeURIComponent(p.b)}">${esc(p.b)}</a></dd></div>
           ${catLinks.length?`<div><dt>Kategória</dt><dd>${catLinks.join('<br>')}</dd></div>`:''}
-          ${sale?`<div><dt>Akciós ár</dt><dd><b class="sale-p">${ft(p.p)}</b></dd></div>
-          <div><dt>Eredeti ár</dt><dd>${ft(p.o)}</dd></div>
-          <div><dt>Megtakarítás</dt><dd>${ft(p.o-p.p)} (−${p.d}%)</dd></div>`:`<div><dt>Ár</dt><dd><b>${ft(p.p)}</b>${p.f?' -tól (méret szerint eltérhet)':''}</dd></div>`}
-          ${p.s&&p.s.length?`<div><dt>Méretek</dt><dd>${p.s.map(esc).join(' · ')}</dd></div>`:''}
-          ${p.w?`<div><dt>Jelölés</dt><dd>Újdonság</dd></div>`:''}
           ${d.sku?`<div><dt>Cikkszám</dt><dd>${esc(d.sku)}</dd></div>`:''}
-          <div><dt>Szállítás</dt><dd>${(p.p||0)>=30000?'Ingyenes (a termék ára eléri a 30 000 Ft-ot)':'Csomagpont 1 190 Ft-tól, házhozszállítás 1 590 Ft-tól; 30 000 Ft feletti rendelésnél ingyenes'}</dd></div>
-          <div><dt>Áruházi átvétel</dt><dd>Ingyenes, 6 áruházban, 1–3 munkanapon belül</dd></div>
+          ${p.w?`<div><dt>Jelölés</dt><dd>Újdonság</dd></div>`:''}
         </dl>
       </section>
       <div class="acc">
         <details open><summary>Termékleírás${icon('i-chev')}</summary><div class="acc-body">${hasDesc?`<ul>${d.d.map(x=>`<li>${esc(x.replace(/^[•\-–]\s*/,''))}</li>`).join('')}</ul>`:`<div class="desc-later"><p>A részletes leírás az éles változatban a webáruház adatbázisából töltődik be.</p><a href="${ORIGIN+esc(p.u)}" target="_blank" rel="noopener">${icon('i-ext','xs')}A termék megtekintése a <span style="white-space:nowrap">kangaboo.hu-n</span></a></div>`}</div></details>
         <details><summary>Szállítás és fizetés${icon('i-chev')}</summary><div class="acc-body"><ul><li>Átvétel áruházban: ingyenes</li><li>GLS / MPL csomagpont: 1 190 / 1 290 Ft</li><li>Házhozszállítás GLS / MPL: 1 590 / 2 990 Ft</li><li>30 000 Ft felett a szállítás ingyenes</li><li>Fizetés: bankkártya, SimplePay, MilPay, utánvét (+590 Ft)</li></ul></div></details>
-        <details><summary>Elérhetőség áruházainkban${icon('i-chev')}</summary><div class="acc-body"><p style="margin-bottom:10px">Online rendelés után bármelyik áruházunkban díjmentesen átvehető:</p><div class="avail">${STORES.map(st=>`<div><span>${esc(st[0])}</span></div>`).join('')}</div></div></details>
+        <details><summary>Elérhetőség áruházainkban${icon('i-chev')}</summary><div class="acc-body"><p style="margin-bottom:10px">Online rendelés után ezekben az áruházakban veheted át:</p><div class="avail">${STORES.map(st=>`<div><span>${esc(st[0])}</span></div>`).join('')}</div></div></details>
         <details><summary>Tanácsra van szükséged?${icon('i-chev')}</summary><div class="acc-body"><p>Hívd ügyfélszolgálatunkat (<a href="tel:+36205396930">+36 20 539 6930</a>, H–P 8–15h), vagy <a href="#/tanacsadas" style="text-decoration:underline">kérj ingyenes szakmai tanácsadást</a>.</p></div></details>
       </div>
       ${hasDesc?`<a class="ext" href="${ORIGIN+esc(p.u)}" target="_blank" rel="noopener">${icon('i-ext','xs')}Megnyitás az eredeti kangaboo.hu oldalon</a>`:''}
