@@ -181,7 +181,7 @@ function card(p){
       <span class="pb">${esc(p.b)}</span>
       <h3><a href="#/termek/${p.i}">${esc(p.n)}</a></h3>
       ${p.s&&p.s.length?`<span class="sizes">Méret: ${esc(p.s[0])}${p.s.length>1?' – '+esc(p.s[p.s.length-1]):''}</span>`:''}
-      <div class="price">${sale?`<b class="sale-p">${ft(p.p)}</b><s>${ft(p.o)}</s>`:`<b>${p.f?'<small>már </small>':''}${ft(p.p)}</b>`}</div>
+      <div class="price">${sale?`<b class="sale-p">${ft(p.p)}</b><s>${ft(p.o)}</s>`:`<b>${ft(p.p)}${p.f?'-tól':''}</b>`}</div>
     </div>
   </article>`;
 }
@@ -738,7 +738,7 @@ function pageProduct(id){
       <span class="pb"><a href="#/marka/${encodeURIComponent(p.b)}">${esc(p.b)}</a></span>
       <h1>${esc(p.n)}</h1>
       ${d.sku?`<span class="sku">Cikkszám: ${esc(d.sku)}</span>`:''}
-      <div class="price">${sale?`<b class="sale-p">${ft(p.p)}</b><s>${ft(p.o)}</s><span class="save">Megtakarítás: ${ft(p.o-p.p)}</span>`:`<b>${p.f?'<small>már </small>':''}${ft(p.p)}</b>`}</div>
+      <div class="price">${sale?`<b class="sale-p">${ft(p.p)}</b><s>${ft(p.o)}</s><span class="save">Megtakarítás: ${ft(p.o-p.p)}</span>`:`<b>${ft(p.p)}${p.f?'-tól':''}</b>`}</div>
       <div class="milpay-note">Vagy <b>4 × ${ft(Math.ceil((p.p||0)/4))}</b> MilPay részletfizetéssel, 0% THM</div>
       ${p.s&&p.s.length?`<div class="opt-title"><span>Válassz méretet</span><span class="muted" id="szSel"></span></div><div class="sizes-pick" id="sizes">${p.s.map(x=>`<button type="button" data-s="${esc(x)}">${esc(x)}</button>`).join('')}</div>`:''}
       <div class="buy">
@@ -781,6 +781,8 @@ function pageProduct(id){
   // size + qty
   let size='';
   $$('#sizes button').forEach(b=>b.onclick=()=>{ $$('#sizes button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); size=b.dataset.s; $('#szSel').textContent='Kiválasztva: '+size; });
+  // ha csak egy méret választható, az előre ki van jelölve
+  if(p.s&&p.s.length===1) $('#sizes button').click();
   const qv=$('#qv'); const setQ=n=>qv.value=Math.max(1,Math.min(99,n|0||1));
   $('#qm').onclick=()=>setQ(+qv.value-1); $('#qp').onclick=()=>setQ(+qv.value+1); qv.onchange=()=>setQ(+qv.value);
   $('#addBtn').onclick=()=>{
