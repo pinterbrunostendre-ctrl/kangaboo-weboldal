@@ -1119,7 +1119,7 @@ document.addEventListener('keydown',e=>{
 
 buildNav(); buildSearch(); badge();
 if(KB.asof){
-  const db=document.querySelector('#demoBar span'); if(db) db.insertAdjacentHTML('afterend',`<span class="asof">${esc(asofText())}</span>`);
+  const db=document.querySelector('#demoBar .demo-full'); if(db) db.insertAdjacentHTML('afterend',`<span class="asof">${esc(asofText())}</span>`);
   if(db) db.parentNode.insertAdjacentHTML('beforeend','<a class="demo-link" href="#/bemutato">Mi változott? →</a>');
   const fb=document.querySelector('.f-bottom > span'); if(fb) fb.insertAdjacentHTML('afterend',`<span>${esc(asofText())}</span>`);
 }

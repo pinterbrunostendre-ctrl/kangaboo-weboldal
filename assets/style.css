@@ -616,16 +616,18 @@ footer .wordmark em{color:var(--coral)}
   .table th,.table td{padding:9px 8px}
   .table th{letter-spacing:.02em;font-size:.68rem}
 }
+.demo-bar .demo-short{display:none}
+/* Telefonon legfeljebb két sor: rövid szöveg + link, a dátum a láblécben látszik */
 @media (max-width:640px){
-  .demo-bar svg{display:none}
-  .demo-bar .asof{display:block;width:100%;font-size:.78rem}
-  .demo-bar .asof::before{content:none}
+  .demo-bar{font-size:.8rem}
+  .demo-bar .wrap{display:block;min-height:0;padding-block:5px;line-height:1.4}
+  .demo-bar svg,.demo-bar .demo-full,.demo-bar .asof{display:none}
+  .demo-bar .demo-short{display:inline;margin-right:6px}
 }
 .demo-bar .demo-link{text-decoration:underline;text-underline-offset:3px;font-weight:700;white-space:nowrap}
 .demo-list{list-style:none;display:grid;gap:12px;margin-top:6px}
 .demo-list li{display:flex;gap:12px;align-items:flex-start;color:var(--ink-2);font-size:.94rem;line-height:1.55}
 .demo-list b{color:var(--ink)}
-@media (max-width:640px){.demo-bar .demo-link{display:block;width:100%}}
 
 /* Termékadatok */
 .specs{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px 6px}
