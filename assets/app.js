@@ -703,12 +703,17 @@ function pageBrands(){
 function pageProduct(id){
   if(!cardsReady([id])) return need(()=>ensureCards([id]),()=>pageProduct(id),'product');
   const p=BYID[id]; if(!p) return page404('A keresett termék nem található.');
+  // a hasonló termékek és a márka további termékei nem kötelezők: ha az adatuk nem töltődik be,
+  // az oldal nélkülük jelenik meg (hibaüzenet csak akkor, ha maga a termék nem érhető el)
+  const fl=SOFTFAIL.seq===SEQ?SOFTFAIL:{};
   const subKeys=(p.c||[]).filter(c=>SUB[c]).map(c=>'sub-'+c);
-  if(!BRANDS||!subKeys.every(k=>FACETS[k])) return need(()=>Promise.all([ensureBrands(),...subKeys.map(ensureFacet)]),()=>pageProduct(id),'product');
-  const pool=[...new Map(subKeys.flatMap(k=>FACETS[k]).map(x=>[x.i,x])).values()].sort((a,b)=>a.k-b.k);
+  const wantRel=!fl.rel&&!subKeys.every(k=>FACETS[k]), wantBrand=!fl.brand&&!BRANDS;
+  if(wantRel||wantBrand) return need(()=>Promise.all([wantBrand?soft('brand',ensureBrands()):0,...(wantRel?subKeys.map(k=>soft('rel',ensureFacet(k))):[])]),()=>pageProduct(id),'product');
+  const pool=fl.rel?[]:[...new Map(subKeys.flatMap(k=>FACETS[k]||[]).map(x=>[x.i,x])).values()].sort((a,b)=>a.k-b.k);
   const relIds=pool.filter(x=>x.i!==p.i&&(x.c||[]).some(c=>(p.c||[]).includes(c))).sort((a,b)=>((b.b===p.b)-(a.b===p.b))||a.k-b.k).slice(0,12).map(x=>x.i);
-  const brandIds=(BRANDS.first[p.b]||[]);
-  if(!cardsReady([...relIds,...brandIds])) return need(()=>ensureCards([...relIds,...brandIds]),()=>pageProduct(id),'product');
+  const brandIds=fl.brand?[]:(BRANDS.first[p.b]||[]);
+  const wantRelC=!cardsReady(relIds), wantBrandC=!cardsReady(brandIds);
+  if(wantRelC||wantBrandC) return need(()=>Promise.all([wantRelC?soft('rel',ensureCards(relIds)):0,wantBrandC?soft('brand',ensureCards(brandIds)):0]),()=>pageProduct(id),'product');
   const c=(+id)%NCH;
   if(!(DCH[c]&&DCH[c].done)) return need(()=>loadDetails(id),()=>pageProduct(id),'product');
   const d=DET[id]||{};
@@ -716,8 +721,8 @@ function pageProduct(id){
   document.title=p.n+' – Kangaboo';
   const gal=(d.g&&d.g.length)?d.g.map(g=>g.startsWith('http')?g:IMGBASE+g):[img(p)].filter(Boolean);
   const sale=p.o&&p.o>p.p;
-  const related=relIds.map(x=>BYID[x]).filter(Boolean);
-  const sameBrand=brandIds.map(x=>BYID[x]).filter(x=>x&&x.i!==p.i).slice(0,12);
+  const related=fl.rel?[]:relIds.map(x=>BYID[x]).filter(Boolean);
+  const sameBrand=fl.brand?[]:brandIds.map(x=>BYID[x]).filter(x=>x&&x.i!==p.i).slice(0,12);
   const ph=icon(t?.meta.i||'c-gift','ph-art');
   const hasDesc=!!(d.d&&d.d.length);
   const catLinks=[...new Set(p.c||[])].filter(c=>SUB[c]).map(c=>{const tt=TOP[SUB2TOP[c]];return `<a href="#/kategoria/${tt.id}">${esc(tt.name)}</a> › <a href="#/kategoria/${tt.id}/${c}">${esc(SUB[c].name)}</a>`;});
@@ -1051,6 +1056,12 @@ function page404(msg){
 
 /* ---------- betöltés: váz és hibaállapot ---------- */
 let SEQ=0;
+// nem kötelező blokkok betöltési hibája az aktuális oldalmegjelenítésre (SEQ) vonatkozóan
+let SOFTFAIL={seq:-1};
+function soft(key,pr){
+  const my=SEQ;
+  return pr.catch(()=>{ if(SOFTFAIL.seq!==my) SOFTFAIL={seq:my}; SOFTFAIL[key]=true; });
+}
 function need(load,render,kind){
   const my=SEQ; app.innerHTML=skeleton(kind); app.setAttribute('aria-busy','true');
   load().then(()=>{ if(my===SEQ){ app.removeAttribute('aria-busy'); render(); } },
